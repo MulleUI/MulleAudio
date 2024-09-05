@@ -1,0 +1,98 @@
+#import <MulleAudio/miniaudio.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+
+
+//#define HAVE_RESOURCE_MANAGER
+//#define HAVE_CONTEXT
+#define HAVE_DEVICE_CONFIG
+#define HAVE_NON_DEFAULT_DEVICE_CONFIG
+// MEMO: have no luck with ma_device_init( NULL, NULL, &_device)
+
+
+int   main( int argc, char *argv[])
+{
+#ifdef HAVE_CONTEXT
+   ma_context                   _context;
+   ma_result                    _context_state;
+#endif
+   ma_context                   *context_p;
+#ifdef HAVE_RESOURCE_MANAGER
+   ma_resource_manager          _resource_manager;
+   ma_result                    _resource_manager_state;
+   ma_resource_manager_config   resource_config;
+#endif
+   ma_device                    _device;
+   ma_result                    _device_state;
+#ifdef HAVE_DEVICE_CONFIG
+   ma_device_config             device_config;
+#endif
+   ma_device_config             *device_config_p;
+   ma_uint32                    i;
+   ma_uint32                    play_count;
+   ma_device_info               *play_infos;
+
+   device_config_p = NULL;
+   context_p       = NULL;
+
+#ifdef HAVE_CONTEXT
+   // ** context **
+   _context_state = ma_context_init( NULL, 0, NULL, &_context);
+   if( _context_state != MA_SUCCESS)
+      abort();
+   context_p = &_context;
+#endif
+
+#if HAVE_RESOURCE_MANAGER
+   // ** resource manager **
+   resource_config                   = ma_resource_manager_config_init();
+   resource_config.decodedFormat     = ma_format_f32;
+   resource_config.decodedChannels   = 2;
+   resource_config.decodedSampleRate = ma_standard_sample_rate_48000;
+
+   _resource_manager_state = ma_resource_manager_init( &resource_config, &_resource_manager);
+   if( _resource_manager_state != MA_SUCCESS)
+    abort();
+#endif
+
+   // ** device **
+#ifdef HAVE_DEVICE_CONFIG
+   device_config                   = ma_device_config_init( ma_device_type_playback);
+#ifdef HAVE_NON_DEFAULT_DEVICE_CONFIG
+   device_config.playback.format   = ma_format_f32;
+   device_config.playback.channels = 2;
+   device_config.sampleRate        = ma_standard_sample_rate_48000;
+#endif
+   device_config_p                 = &device_config;
+
+# ifdef HAVE_CONTEXT
+   if( ma_context_get_devices( &_context, &play_infos, &play_count, NULL, NULL) != MA_SUCCESS)
+   {
+      abort();
+   }
+
+   for( i = 0; i < play_count; i++)
+      if( play_infos[ i].isDefault)
+      {
+         device_config.playback.pDeviceID = &play_infos[ i].id;
+         fprintf( stderr, "Found default device\n");
+         break;
+      }
+# endif
+#endif
+
+   _device_state = ma_device_init( context_p, device_config_p, &_device);
+   if( _device_state != MA_SUCCESS)
+   {
+      fprintf( stderr, "Could not init device (context: %p, config: %p)\n", context_p, device_config_p);
+      abort();
+   }
+
+   ma_device_start( &_device);
+   fprintf( stderr, "Started device\n");
+
+   sleep(2);
+   return( 0);
+}
