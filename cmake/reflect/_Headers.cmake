@@ -37,6 +37,7 @@ src/generic/include-private.h
 #
 set( PRIVATE_HEADERS
 src/MulleAudioContext+Private.h
+src/MulleAudioEngine+Private.h
 )
 
 #

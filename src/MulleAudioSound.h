@@ -31,10 +31,14 @@
 // ma_sound to play around with it.
 //
 // This class is as thread safe as ma_sound is, so declared as such
+//
+// The MulleAudioEngine probably needs to maintain an array of
+// sounds and finalize them when it finalizes (like a UIView->subview thing)
+//
 @interface MulleAudioSound : NSObject < NSMutableCopying, MulleObjCThreadSafe>
 {
-   ma_sound   *_sound;
-   ma_sound    _sound_space;
+   ma_sound               *_sound;
+   ma_sound                _sound_space;
 
    mulle_atomic_id_t      _atomicDelegate;
    MulleAudioDataSource   *_audioDataSource;

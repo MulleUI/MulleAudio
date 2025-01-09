@@ -1,0 +1,43 @@
+{
+   project =
+   {
+      description="🦻 MulleAudio plays sounds (like a soundboard)";
+      domain="github";
+      language="c";
+      dialect="objc";
+      name="MulleAudio";
+      user="MulleUI";
+      repo="MulleAudio";
+      homepage="https://github.com/MulleUI/MulleAudio";
+      license="BSD-3-Clause";
+   };
+   dependencies =
+   (
+      {
+         description="💎 A collection of Objective-C root classes for mulle-objc";
+         domain="github";
+         name="MulleObjC";
+         repo="MulleObjC";
+         url="https://github.com/mulle-objc/MulleObjC";
+         user="mulle-objc";
+      },
+      {
+         description="📒 Lists mulle-objc runtime information contained in executables.";
+         domain="github";
+         name="mulle-objc-list";
+         repo="mulle-objc-list";
+         url="https://github.com/mulle-objc/mulle-objc-list";
+         user="mulle-objc";
+      }
+   );
+   embedded =
+   (
+      {
+         domain="generic";
+         name="src/miniaudio.h";
+         repo="mackron/miniaudio/master/miniaudio.h";
+         url="https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h";
+         user="";
+      }
+   );
+}

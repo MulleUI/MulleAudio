@@ -3,6 +3,7 @@
 #import "import-private.h"
 
 #import "MulleAudioEngine.h"
+#import "MulleAudioEngine+Private.h"
 #import "MulleAudioDataSource.h"
 
 
@@ -34,6 +35,7 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
    self->_didStop = YES;
 }
 
+
 - (instancetype) initWithMiniAudioSound:(ma_sound *) sound
                             audioEngine:(MulleAudioEngine *) audioEngine
                         pathUTF8String:(char *) path
@@ -50,32 +52,35 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
    }
 
    self = [super init];
-   if( self)
+   if( ! self)
+      return( self);
+
+   if( path)
    {
-      if( path)
-      {
-         MulleObjCObjectSetDuplicatedUTF8String( self, &_pathUTF8String, path);
+      MulleObjCObjectSetDuplicatedUTF8String( self, &_pathUTF8String, path);
 #ifdef __WIN32
-         name = strrchr( path, '/');
+      name = strrchr( path, '/');
 #else         
-         name = strrchr( path, '\\');
+      name = strrchr( path, '\\');
 #endif         
-         name = name ? name + 1 : path;
-         dot  = strchr( name, '.');
-         dot  = dot ? dot : &name[ strlen( name)];
-         name = MulleObjC_asprintf( "%.*s", dot - name, name);
-         MulleObjCObjectSetDuplicatedUTF8String( self, &_nameUTF8String, name);
-      }
-      _audioEngine = audioEngine;
-      _sound       = sound;
-      _streaming   = isStreaming;
-
-      ma_sound_get_data_format( _sound, NULL, NULL, &sampleRate, NULL, 0);
-      assert( sampleRate);
-      _sampleRate  = 1.0 / sampleRate;
-
-      ma_sound_set_end_callback( sound, on_sound_end, self);
+      name = name ? name + 1 : path;
+      dot  = strchr( name, '.');
+      dot  = dot ? dot : &name[ strlen( name)];
+      name = MulleObjC_asprintf( "%.*s", dot - name, name);
+      MulleObjCObjectSetDuplicatedUTF8String( self, &_nameUTF8String, name);
    }
+
+   _audioEngine = [audioEngine retain];
+   [_audioEngine _addSound:self];
+
+   _sound       = sound;
+   _streaming   = isStreaming;
+
+   ma_sound_get_data_format( _sound, NULL, NULL, &sampleRate, NULL, 0);
+   assert( sampleRate);
+   _sampleRate  = 1.0 / sampleRate;
+
+   ma_sound_set_end_callback( sound, on_sound_end, self);
    return( self);
 }
 
@@ -133,7 +138,6 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
       return( nil);
    }
 
-
    // Initialize a sound from the data source
    result = ma_sound_init_from_data_source( [audioEngine miniAudioEngine],
                                             [dataSource miniAudioDataSource],
@@ -156,21 +160,36 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
 
 - (void) finalize
 {
-   // stop it, but its managed by the resource manager
+   [_audioEngine _removeSound:self];
+
+   // stop it, but it's managed by the resource manager
    if( _sound)
    {
       ma_sound_set_end_callback( _sound, 0, 0);  // dont want no callback in finalize
       ma_sound_stop( _sound);
    }
 
+   if( _sound == &_sound_space)
+   {
+      ma_sound_uninit( _sound);
+      _sound = NULL;
+   }
+
+   [_audioEngine autorelease];
+   _audioEngine = nil;
+
+
    [super finalize];
 }
+
 
 - (void) dealloc 
 {
    [_audioDataSource release];
+
    MulleObjCObjectSetDuplicatedUTF8String( self, &_nameUTF8String, NULL);
    MulleObjCObjectSetDuplicatedUTF8String( self, &_pathUTF8String, NULL);
+
    [super dealloc];
 }
 
@@ -271,6 +290,8 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
    }
    else
    {
+      // Cloning only works for data buffers (not streams) that are loaded from
+      // the resource manager
       result = ma_sound_init_copy( [_audioEngine miniAudioEngine], _sound, 0, NULL, &copy->_sound_space);
       if( result != MA_SUCCESS)
       {

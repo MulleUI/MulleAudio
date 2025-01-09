@@ -124,9 +124,8 @@ typedef NS_ENUM( NSUInteger, MulleAudioSampleEncoding)
 - (MulleAudioVoiceHandle) audioVoiceWithContentsOfFileUTF8String:(char *) filepath
                                                    options:(MulleAudioVoiceOptions) options;
 
-- (MulleAudioVoiceHandle) audioVoiceWithEmbeddedFileBytes:(void *) bytes
-                                                   length:(NSUInteger) length
-                                                 options:(MulleAudioVoiceOptions) options;
+- (MulleAudioVoiceHandle) audioVoiceWithFileCData:(struct mulle_data) data
+                                          options:(MulleAudioVoiceOptions) options;
 
 - (MulleAudioVoiceHandle) audioVoiceWithBytes:(void *) bytes
                                        length:(NSUInteger) length
@@ -143,6 +142,8 @@ typedef NS_ENUM( NSUInteger, MulleAudioSampleEncoding)
 - (void) playVoice:(MulleAudioVoiceHandle) voice;
 - (void) pauseVoice:(MulleAudioVoiceHandle) voice;
 - (void) stopVoice:(MulleAudioVoiceHandle) voice;
+
+- (BOOL) isPlayingVoice:(MulleAudioVoiceHandle) voice;
 
 - (void) fadeInVoice:(MulleAudioVoiceHandle) voice
                 time:(mulle_relativetime_t) time;

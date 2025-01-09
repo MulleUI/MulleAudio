@@ -15,9 +15,8 @@ int  main( int argc, char *argv[])
    filename = "foreseen.inc";
 
    audio = [MulleAudio object];
-   voice = [audio audioVoiceWithEmbeddedFileBytes:foreseen
-                                           length:s_foreseen
-                                          options:MulleAudioVoiceOptionVoiceAny];
+   voice = [audio audioVoiceWithFileCData:mulle_data_make( foreseen, s_foreseen)
+                                  options:MulleAudioVoiceOptionVoiceAny];
    if( voice == MulleAudioVoiceOptionNoVoice)
    {
       switch( errno)

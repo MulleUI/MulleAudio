@@ -29,6 +29,7 @@
 
    allocator = MulleObjCInstanceGetAllocator( self);
    mulle_array_init( &_engines, 0, &MulleObjCContainerRetainKeyCallback, allocator);
+
    return( self);
 }
 
@@ -39,6 +40,8 @@
    struct mulle_array  copy;
 
    copy = _engines;
+
+   // engines who remove themselves, will just not find themselves
    mulle_array_init( &_engines, 0, _engines.callback, _engines.allocator);
 
    // audio engines will remove themselves from _engines
@@ -48,7 +51,10 @@
       [audioEngine mullePerformFinalize];
    }
 
+   // now this sends a release to all the engines
    mulle_array_done( &copy);
+
+   // ensure no new engines suddenly appeared
    assert( mulle_array_get_count( &_engines) == 0);
 
    [super finalize];
@@ -88,12 +94,11 @@
 }
 
 
-- (id) _engineAtIndex:(NSUInteger) i
+- (struct mulle_array *) _engines
 {
-   if( i >= mulle_array_get_count( &_engines))
-      return( nil);
-   return( mulle_array_get( &_engines, i));
+   return( &_engines);
 }
+
 
 
 - (MulleAudioEngine *) audioEngineWithMiniAudioEngineConfig:(ma_engine_config *) config

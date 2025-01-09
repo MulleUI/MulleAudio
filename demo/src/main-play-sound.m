@@ -1,8 +1,6 @@
 #import "MulleAudio.h"
 
 
-
-
 int  main( int argc, char *argv[])
 {
    MulleAudioContext  *context;
@@ -20,7 +18,7 @@ int  main( int argc, char *argv[])
       return( 1);
    }
 
-   sound  = [engine audioSoundWithContentsOfFileUTF8String:filename];
+   sound = [engine audioSoundWithContentsOfFileUTF8String:filename];
    if( ! sound)
    {
       mulle_fprintf( stderr, "Could not load \"%s\"\n", filename);
@@ -33,14 +31,15 @@ int  main( int argc, char *argv[])
    [sound setBalance:-1.0];
    [sound setPitch:0.75];
 
-   mulle_fprintf( stderr, "Playing \"%s\" on %@\n", filename, [engine audioDevice]);
+   mulle_fprintf( stderr, "Playing \"%s\" on %@\n", filename,
+                                                    [engine audioDevice]);
 
    [sound start];
    [sound waitForCompletion];
 
-   // MEMO: as the miniaudio thread has been turned into a NSThread, when
-   //       doing a pedantic exit, the universe will wait for it to finish
-   //       but it won't unless we uninit miniaudio
+   // MEMO: as the miniaudio thread has been turned into a NSThread,
+   //       when doing a pedantic exit, the universe will wait for
+   //       it to finish. But it won't, unless we uninit miniaudio
    [context mullePerformFinalize];
    return( 0);
 }

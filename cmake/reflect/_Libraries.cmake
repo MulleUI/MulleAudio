@@ -18,25 +18,29 @@ endif()
 # Disable for a sdk: `mulle-sourcetree mark asound no-cmake-sdk-<name>`
 #
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-   if( NOT ASOUND_LIBRARY)
-      find_library( ASOUND_LIBRARY NAMES
-         asound
-      )
-      message( STATUS "ASOUND_LIBRARY is ${ASOUND_LIBRARY}")
-      #
-      # The order looks ascending, but due to the way this file is read
-      # it ends up being descending, which is what we need.
-      #
-      if( ASOUND_LIBRARY)
+   if( COLLECT_ALL_LOAD_OS_SPECIFIC_LIBRARIES_AS_NAMES)
+      list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES "asound")
+   else()
+      if( NOT ASOUND_LIBRARY)
+         find_library( ASOUND_LIBRARY NAMES
+            asound
+         )
+         message( STATUS "ASOUND_LIBRARY is ${ASOUND_LIBRARY}")
          #
-         # Add ASOUND_LIBRARY to ALL_LOAD_OS_SPECIFIC_LIBRARIES list.
-         # Disable with: `mulle-sourcetree mark asound no-cmake-add`
+         # The order looks ascending, but due to the way this file is read
+         # it ends up being descending, which is what we need.
          #
-         list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${ASOUND_LIBRARY})
-         # intentionally left blank
-      else()
-         # Disable with: `mulle-sourcetree mark asound no-require-link`
-         message( FATAL_ERROR "ASOUND_LIBRARY was not found")
+         if( ASOUND_LIBRARY)
+            #
+            # Add ASOUND_LIBRARY to ALL_LOAD_OS_SPECIFIC_LIBRARIES list.
+            # Disable with: `mulle-sourcetree mark asound no-cmake-add`
+            #
+            list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${ASOUND_LIBRARY})
+            # intentionally left blank
+         else()
+            # Disable with: `mulle-sourcetree mark asound no-require-link`
+            message( SEND_ERROR "ASOUND_LIBRARY was not found")
+         endif()
       endif()
    endif()
-   endif()
+endif()

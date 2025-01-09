@@ -2,25 +2,19 @@
 #import <mulle-objc-debug/mulle-objc-debug.h>
 
 
-@interface MulleAudio( Category)
-@end
+static char   foreseen[ 32] = "";
 
-@implementation MulleAudio( Category)
-@end
+#define s_foreseen  (sizeof( foreseen) - 1)
 
-- (MulleAudioVoiceHandle) audioVoiceWithEmbeddedFileBytes:(void *) bytes
-                                                   length:(NSUInteger) length
-                                                 options:(MulleAudioVoiceOptions) options;
 
 int   main( int argc, char *argv[])
 {
-   MulleAudioVoice   voice;
-   MulleAudio        *audio;
+   MulleAudioVoiceHandle   voice;
+   MulleAudio              *audio;
 
    audio = [MulleAudio object];
-   voice = [audio audioVoiceWithEmbeddedFileBytes:foreseen
-                                           length:s_foreseen
-                                           options:MulleAudioVoiceOptionVoiceAny];
+   voice = [audio audioVoiceWithFileCData:mulle_data_make( foreseen, s_foreseen)
+                                  options:MulleAudioVoiceOptionVoiceAny];
 
    return( 0);
 }

@@ -14,13 +14,26 @@
 @class MulleAudioSound;
 
 
+// the basic design is:
+//
+// Context => Engine -> Device
+//             ^
+//             ||
+//            Sound
+//
+// So a Context owns the engines, each engine has a device. A sound
+// owns the engine. When the engine is finalized, all sounds are finalized.
+// When the context finalizes, all engines finalize.
+//
 @interface MulleAudioEngine : NSObject < MulleObjCThreadSafe>
 {
-   struct ma_engine   *_engine;
-   struct ma_engine   _engine_space;
+   struct ma_engine     *_engine;
+   struct ma_engine     _engine_space;
+
+   struct mulle_pointerarray   _sounds;
 }
 
-- (struct ma_engine *)  miniAudioEngine;
+- (struct ma_engine *)    miniAudioEngine;
 - (ma_resource_manager *) miniAudioResourceManager;
 
 @property( readonly, assign) MulleAudioContext   *audioContext;

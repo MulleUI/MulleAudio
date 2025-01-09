@@ -16,7 +16,8 @@
                             audioContext:(MulleAudioContext *) audioContext
                              audioDevice:(MulleAudioDevice *) audioDevice
 {
-   ma_device   *device;
+   ma_device                *device;
+   struct mulle_allocator   *allocator;
 
    if( ! audioContext)
    {
@@ -46,6 +47,9 @@
 
       _audioContext = audioContext;
       [_audioContext _addEngine:self];
+
+      allocator = MulleObjCInstanceGetAllocator( self);
+      mulle_pointerarray_init( &_sounds, 16, allocator);
    }
 
    return( self);
@@ -121,19 +125,49 @@
 
 - (void) finalize
 {
+   struct mulle_pointerarray  copy;
+   MulleAudioSound            *audioSound;
+
+   [_audioContext _removeEngine:self];
+
+   copy = _sounds;
+
+   // sounds who remove themselves, will just not find themselves
+   mulle_pointerarray_init( &_sounds, 0, _sounds.allocator);
+
+   // audio engines will remove themselves from _engines
+   // so operate on a copy
+   mulle_pointerarray_for( &copy, audioSound)
+   {
+      [audioSound mullePerformFinalize];
+   }
+
+   mulle_pointerarray_done( &copy);
+
+   // ensure no new engines suddenly appeared
+   assert( mulle_pointerarray_get_count( &_sounds) == 0);
+
+   // NOW do the rest
+
    if( _engine)
       ma_engine_stop( _engine);
 
+
    [_audioDevice mullePerformFinalize];
    [_audioDevice setAudioEngine:nil];
-   [_audioContext _removeEngine:self];
 
    if( _engine)
    {
       ma_engine_uninit( _engine);
       if( NSDebugEnabled)
          mulle_fprintf( stderr, "miniaudio engine uninit\n");
+      _engine = NULL;
    }
+
+   // get rid of readonly property
+   [_audioDevice release];
+   _audioDevice = nil;
+
    [super finalize];
 }
 
@@ -141,6 +175,20 @@
 - (void) dealloc
 {
    [super dealloc];
+}
+
+
+- (void) _addSound:(MulleAudioSound *) sound
+{
+   assert( ! [self mulleIsFinalized]);
+
+   mulle_pointerarray_add( &_sounds, sound);
+}
+
+
+- (void) _removeSound:(MulleAudioSound *) sound
+{
+   mulle_pointerarray_remove_unique( &_sounds, sound);
 }
 
 
@@ -167,27 +215,29 @@
    return( audioSound);
 }
 
+
 - (MulleAudioSound *) audioSoundWithBytes:(void *) bytes
                                    length:(NSUInteger) length
                           miniAudioFormat:(ma_format) format
                          numberOfChannels:(NSInteger) numberOfChannels
                       miniAudioSampleRate:(ma_standard_sample_rate) sampleRate
 {
-   MulleAudioSound       *audioSound;
-   MulleAudioDataSource  *audioDataSource;
+   MulleAudioSound        *audioSound;
+   MulleAudioDataSource   *audioDataSource;
 
    audioDataSource = [MulleAudioDataSource alloc];
    audioDataSource = [audioDataSource initWithBytes:bytes
-                                   length:length
-                          miniAudioFormat:format
-                         numberOfChannels:numberOfChannels
-                      miniAudioSampleRate:sampleRate];
+                                             length:length
+                                    miniAudioFormat:format
+                                   numberOfChannels:numberOfChannels
+                                miniAudioSampleRate:sampleRate];
    audioDataSource = [audioDataSource autorelease];
 
    audioSound = [MulleAudioSound alloc];
    audioSound = [audioSound initWithAudioDataSource:audioDataSource
                                         audioEngine:self];
    audioSound = [audioSound autorelease];
+
    return( audioSound);
 }
 

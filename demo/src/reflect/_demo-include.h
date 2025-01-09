@@ -15,21 +15,6 @@
 #define _demo_include_h__
 
 // To remove the following dependency (headers and library) completely:
-//   `mulle-sde dependency remove libsoundio`
-// (Use BF13938A-C7D8-4A47-9EDA-D1207EF0D7E9 instead of libsoundio, if there are duplicate entries)
-//
-// You can tweak the following #include with these commands:
-//    remove #include: `mulle-sde dependency mark libsoundio no-header`
-//    rename              : `mulle-sde dependency|library set libsoundio include whatever.h`
-//    reorder             : `mulle-sde dependency move libsoundio <up|down>`
-//    toggle #include: `mulle-sde dependency mark libsoundio [no-]import`
-//    toggle public       : `mulle-sde dependency mark libsoundio [no-]public`
-//    toggle optional     : `mulle-sde dependency mark libsoundio [no-]require`
-//    remove for platform : `mulle-sde dependency mark libsoundio no-platform-<uname>`
-//        (use `mulle-sourcetree-to-c --unames` to list known values)
-#include <soundio/soundio.h>   // libsoundio
-
-// To remove the following dependency (headers and library) completely:
 //   `mulle-sde dependency remove m`
 // (Use 7D67B404-A6B9-49B8-A91A-AA7F83089C58 instead of m, if there are duplicate entries)
 //

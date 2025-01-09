@@ -66,7 +66,8 @@
 - (void) stop
 {
    assert( ! _audioEngine);
-   ma_device_stop( _device);     // The device is sleeping by default so you'll need to start it manually.
+   if( ma_device_get_state( _device) == ma_device_state_started)
+      ma_device_stop( _device);     
 }
 
 
@@ -81,11 +82,19 @@
    // only uninit if ours
    if( _device == &_device_space)
    {
-      ma_device_stop( _device);
+      // otherwise we run into an assert in miniaudio
+      if( ma_device_get_state( _device) == ma_device_state_started)
+         ma_device_stop( _device);
       ma_device_uninit( _device);
       if( NSDebugEnabled)
          mulle_fprintf( stderr, "miniaudio device uninit\n");
+
+      _device = NULL;
    }
+
+   // assign only
+   _audioContext = nil;
+   _audioEngine  = nil;
 
    [super finalize];
 }

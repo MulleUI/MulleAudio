@@ -39,9 +39,12 @@ int   main( int argc, char *argv[])
       return( 1);
    }
 
-   audioEngine  = [[[MulleAudioEngine alloc] initWithMiniAudioEngineConfig:NULL
-                                                             audioContext:audioContext
-                                                              audioDevice:audioDevice] autorelease];
+   audioEngine = [MulleAudioEngine alloc];
+   audioEngine = [audioEngine initWithMiniAudioEngineConfig:NULL
+                                               audioContext:audioContext
+                                                audioDevice:audioDevice];
+   audioEngine = [audioEngine autorelease];
+
    if( ! audioEngine)
    {
       mulle_fprintf( stderr, "got no engine\n");
@@ -60,22 +63,24 @@ int   main( int argc, char *argv[])
       mulle_fprintf( stderr, "got no dataSource\n");
       return( 1);
    }
-   audioSound      = [MulleAudioSound alloc];
-   audioSound      = [audioSound initWithAudioDataSource:audioDataSource
-                                             audioEngine:audioEngine];
-   audioSound      = [audioSound autorelease];
+
+   audioSound = [MulleAudioSound alloc];
+   audioSound = [audioSound initWithAudioDataSource:audioDataSource
+                                        audioEngine:audioEngine];
+   audioSound = [audioSound autorelease];
    if( ! audioSound)
    {
       mulle_fprintf( stderr, "got no sound\n");
       return( 1);
    }
 
+#if 0
    audioSoundCopy  = [[audioSound mutableCopy] autorelease];
    if( ! audioSoundCopy)
    {
       mulle_fprintf( stderr, "got no sound copy\n");
       return( 1);
    }
-
+#endif
    return( 0);
 }

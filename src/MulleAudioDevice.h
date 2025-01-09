@@ -19,7 +19,7 @@
 // engines...
 // The "MulleAudioDevice" object is retained by the engine. You often don't
 // need to use this explicitly, as the engine will set up a device by
-// default
+// default.
 //
 @interface MulleAudioDevice : NSObject < MulleObjCThreadSafe>
 {

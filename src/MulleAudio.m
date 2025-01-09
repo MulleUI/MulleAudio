@@ -54,6 +54,7 @@
    [super dealloc];
 }
 
+
 - (void) finalize
 {
    struct mulle_allocator   *allocator;
@@ -298,6 +299,7 @@ found:
    return( &p[ i]);
 }
 
+
 - (MulleAudioSound *) audioSoundOfVoice:(MulleAudioVoiceHandle) voice
 {
    struct MulleAudioVoice   *p;
@@ -325,17 +327,17 @@ found:
    return( voice);
 }
 
-- (MulleAudioVoiceHandle) audioVoiceWithEmbeddedFileBytes:(void *) bytes
-                                                   length:(NSUInteger) length
-                                                  options:(MulleAudioVoiceOptions) options
+
+- (MulleAudioVoiceHandle) audioVoiceWithFileCData:(struct mulle_data) data
+                                          options:(MulleAudioVoiceOptions) options
 {
-   MulleAudioEngine   *audioEngine;
-   MulleAudioSound    *audioSound;
-   MulleAudioVoiceHandle    voice;
+   MulleAudioEngine        *audioEngine;
+   MulleAudioSound         *audioSound;
+   MulleAudioVoiceHandle   voice;
 
    audioEngine = [self audioEngine];
-   audioSound  = [audioEngine audioSoundWithBytes:bytes
-                                           length:length
+   audioSound  = [audioEngine audioSoundWithBytes:data.bytes
+                                           length:data.length
                                   miniAudioFormat:ma_format_unknown
                                  numberOfChannels:0
                               miniAudioSampleRate:0];
@@ -353,9 +355,9 @@ found:
                                  sampleRateHz:(NSUInteger) sampleRateHz
                                       options:(MulleAudioVoiceOptions) options;
 {
-   MulleAudioEngine   *audioEngine;
-   MulleAudioSound    *audioSound;
-   MulleAudioVoiceHandle    voice;
+   MulleAudioEngine        *audioEngine;
+   MulleAudioSound         *audioSound;
+   MulleAudioVoiceHandle   voice;
 
    audioEngine = [self audioEngine];
 
@@ -411,6 +413,15 @@ found:
    audioSound = [self audioSoundOfVoice:voice];
    [audioSound stop];
    [audioSound setSeek:0];
+}
+
+
+- (BOOL) isPlayingVoice:(MulleAudioVoiceHandle) voice;
+{
+   MulleAudioSound   *audioSound;
+
+   audioSound = [self audioSoundOfVoice:voice];
+   return( [audioSound isPlaying]);
 }
 
 
