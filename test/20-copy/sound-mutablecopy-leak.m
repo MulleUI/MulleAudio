@@ -74,8 +74,10 @@ int   main( int argc, char *argv[])
       return( 1);
    }
 
-#if 0
-   audioSoundCopy  = [[audioSound mutableCopy] autorelease];
+#if 1
+   audioSoundCopy = [MulleAudioSound alloc];
+   audioSoundCopy = [audioSoundCopy initWithAudioSound:audioSound];
+   audioSoundCopy = [audioSoundCopy autorelease];
    if( ! audioSoundCopy)
    {
       mulle_fprintf( stderr, "got no sound copy\n");

@@ -91,13 +91,15 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
                                    miniAudioFlags:(NSUInteger) flags
 {
    ma_result   result;
+   ma_engine   *miniEngine;
 
-   result = ma_sound_init_from_file( [audioEngine miniAudioEngine],
-                                     path,
-                                     flags,
-                                     NULL,
-                                     NULL,
-                                     &_sound_space);
+   miniEngine = [audioEngine miniAudioEngine];
+   result     = ma_sound_init_from_file( miniEngine,
+                                         path,
+                                         flags,
+                                         NULL,
+                                         NULL,
+                                         &_sound_space);
    if( result != MA_SUCCESS) 
    {
       [self release];
@@ -130,7 +132,9 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
 - (instancetype) initWithAudioDataSource:(MulleAudioDataSource *) dataSource
                              audioEngine:(MulleAudioEngine *) audioEngine
 {
-   ma_result   result;
+   ma_result       result;
+   ma_engine       *miniEngine;
+   ma_data_source  *miniSource;
 
    if( ! dataSource)
    {
@@ -138,12 +142,14 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
       return( nil);
    }
 
+   miniEngine = [audioEngine miniAudioEngine];
+   miniSource = [dataSource miniAudioDataSource];
    // Initialize a sound from the data source
-   result = ma_sound_init_from_data_source( [audioEngine miniAudioEngine],
-                                            [dataSource miniAudioDataSource],
-                                            0,
-                                            NULL,
-                                            &_sound_space);
+   result     = ma_sound_init_from_data_source( miniEngine,
+                                                miniSource,
+                                                0,
+                                                NULL,
+                                                &_sound_space);
    if (result != MA_SUCCESS)
    {
       [self release];
@@ -156,6 +162,52 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
                             audioEngine:audioEngine
                          pathUTF8String:NULL
                             isStreaming:NO]);
+}
+
+
+- (MulleAudioSound *) initWithAudioSound:(MulleAudioSound *) other
+{
+  ma_result         result;
+  char             *name;
+  ma_engine        *miniEngine;
+  ma_data_source   *dataSource;
+
+  // Check streaming first - fastest check and has clear copy strategy
+  if (other->_streaming)
+  {
+     self = [self initWithStreamingContentsOfFileUTF8String:other->_pathUTF8String
+                                                audioEngine:other->_audioEngine];
+  }
+  else
+  {
+     dataSource = ma_sound_get_data_source(other->_sound);
+
+     // ugliness but no other way
+     if( other->_sound && other->_sound->pResourceManagerDataSource != NULL)
+     {
+        miniEngine = [other->_audioEngine miniAudioEngine];
+        result = ma_sound_init_copy(miniEngine, other->_sound, 0, NULL, &self->_sound_space);
+        if (result != MA_SUCCESS)
+        {
+           [self release];
+           return nil;
+        }
+        self = [self initWithMiniAudioSound:&self->_sound_space
+                               audioEngine:other->_audioEngine
+                            pathUTF8String:other->_pathUTF8String
+                               isStreaming:NO];
+     }
+     else
+     {
+        self = [self initWithAudioDataSource:other->_audioDataSource
+                                 audioEngine:other->_audioEngine];
+     }
+  }
+
+  name = other->_nameUTF8String ? MulleObjC_asprintf("Copy of %s", other->_nameUTF8String) : NULL;
+  [self setNameUTF8String:name];
+
+  return self;
 }
 
 - (void) finalize
@@ -273,50 +325,6 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
       mulle_thread_yield();
    }
 }
-
-
-- (MulleAudioSound *) mutableCopy
-{
-   ma_result         result;
-   MulleAudioSound   *copy;
-   char              *name;
-
-   // can't ma_sound_init_copy streaming sounds
-   copy = [[self class] alloc];
-   if( _streaming)
-   {
-      copy = [copy initWithStreamingContentsOfFileUTF8String:_pathUTF8String
-                                                 audioEngine:_audioEngine];
-   }
-   else
-   {
-      // Cloning only works for data buffers (not streams) that are loaded from
-      // the resource manager
-      result = ma_sound_init_copy( [_audioEngine miniAudioEngine], _sound, 0, NULL, &copy->_sound_space);
-      if( result != MA_SUCCESS)
-      {
-         [copy release];
-         return( nil);
-      }
-
-      copy = [copy initWithMiniAudioSound:&_sound_space
-                              audioEngine:_audioEngine
-                           pathUTF8String:_pathUTF8String
-                              isStreaming:NO];
-      // if sharing a dataSource retain it
-      copy->_audioDataSource = [_audioDataSource retain];
-   }
-
-
-   // MEMO: need to change the name here to ... lets just wipe it for now
-   name = NULL;   // wipe name unless..
-   if( _nameUTF8String)
-      name = MulleObjC_asprintf( "Copy of %s", _nameUTF8String);
-   [copy setNameUTF8String:name];
-
-   return( copy);
-}
-
 
 // ma_sound_set_end_callback: Sets a callback that is triggered when the sound finishes playing.
 // ma_sound_start: Starts playing the sound.

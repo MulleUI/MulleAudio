@@ -35,7 +35,7 @@
 // The MulleAudioEngine probably needs to maintain an array of
 // sounds and finalize them when it finalizes (like a UIView->subview thing)
 //
-@interface MulleAudioSound : NSObject < NSMutableCopying, MulleObjCThreadSafe>
+@interface MulleAudioSound : NSObject < MulleObjCThreadSafe>
 {
    ma_sound               *_sound;
    ma_sound                _sound_space;
@@ -91,6 +91,8 @@
 - (instancetype) initWithContentsOfFileUTF8String:(char *) soundFilePath
                                       audioEngine:(MulleAudioEngine *) audioEngine;
 
+// copying another sound
+- (MulleAudioSound *) initWithAudioSound:(MulleAudioSound *) other;
 
 
 // lowlevel and designated
@@ -109,8 +111,6 @@
                              audioEngine:(MulleAudioEngine *) audioEngine;
 
 - (ma_sound *) miniAudioSound;
-
-- (MulleAudioSound *) mutableCopy;
 
 
 - (BOOL) isPlaying;
