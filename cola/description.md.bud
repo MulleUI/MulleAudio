@@ -4,4 +4,9 @@ it. MulleAudio can mix multiple voice that are being played simultaneously.
 MulleAudio is conceptually based on [Finch](https://github.com/zoul/Finch),
 but uses [miniaudio](https://miniaud.io/) and [mulle-objc](https://mulle-objc.github.io)
 
+> #### TODO
+>
+> Investigate to use [soloud](https://solhsa.com/soloud/) which is on top
+> of miniaudio for more features ?
+>
 

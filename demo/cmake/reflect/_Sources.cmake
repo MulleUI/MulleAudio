@@ -17,7 +17,6 @@ set( SOURCES
 ../src/MulleAudioEngine.m
 ../src/MulleAudioSound.m
 ../src/MulleAudio.m
-src/main-decode-memory.m
 src/main-enumerate-devices.m
 src/main-play-sound.m
 src/main-play-voice-embedded-samples.m
