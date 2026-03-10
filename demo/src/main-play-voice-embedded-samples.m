@@ -18,7 +18,7 @@ int  main( int argc, char *argv[])
 
    filename = "foreseen.inc";
 
-   audio = [MulleAudio object];
+   audio = [MulleAudio instance];
    voice = [audio audioVoiceWithBytes:samples
                                length:sizeof( samples)
                        sampleEncoding:MulleAudioSampleEncodingUnsignedByte

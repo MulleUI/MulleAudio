@@ -6,6 +6,10 @@
 
 #import "import.h"
 
+#ifndef MULLE_BOOL_DEFINED
+# error "you need to include <mulle-c11/mulle-c11-bool.h> before including \"miniaudio.h\""
+#endif
+
 #include "miniaudio.h"
 
 

@@ -167,47 +167,44 @@ static void   on_sound_end( void* pUserData, ma_sound* pSound)
 
 - (MulleAudioSound *) initWithAudioSound:(MulleAudioSound *) other
 {
-  ma_result         result;
-  char             *name;
-  ma_engine        *miniEngine;
-  ma_data_source   *dataSource;
+   char         *name;
+   ma_engine    *miniEngine;
+   ma_result    result;
 
-  // Check streaming first - fastest check and has clear copy strategy
-  if (other->_streaming)
-  {
-     self = [self initWithStreamingContentsOfFileUTF8String:other->_pathUTF8String
-                                                audioEngine:other->_audioEngine];
-  }
-  else
-  {
-     dataSource = ma_sound_get_data_source(other->_sound);
+   // Check streaming first - fastest check and has clear copy strategy
+   if (other->_streaming)
+   {
+      self = [self initWithStreamingContentsOfFileUTF8String:other->_pathUTF8String
+                                                 audioEngine:other->_audioEngine];
+   }
+   else
+   {
+      // ugliness but no other way
+      if( other->_sound && other->_sound->pResourceManagerDataSource != NULL)
+      {
+         miniEngine = [other->_audioEngine miniAudioEngine];
+         result = ma_sound_init_copy(miniEngine, other->_sound, 0, NULL, &self->_sound_space);
+         if (result != MA_SUCCESS)
+         {
+            [self release];
+            return nil;
+         }
+         self = [self initWithMiniAudioSound:&self->_sound_space
+                                 audioEngine:other->_audioEngine
+                              pathUTF8String:other->_pathUTF8String
+                                 isStreaming:NO];
+      }
+      else
+      {
+         self = [self initWithAudioDataSource:other->_audioDataSource
+                                  audioEngine:other->_audioEngine];
+      }
+   }
 
-     // ugliness but no other way
-     if( other->_sound && other->_sound->pResourceManagerDataSource != NULL)
-     {
-        miniEngine = [other->_audioEngine miniAudioEngine];
-        result = ma_sound_init_copy(miniEngine, other->_sound, 0, NULL, &self->_sound_space);
-        if (result != MA_SUCCESS)
-        {
-           [self release];
-           return nil;
-        }
-        self = [self initWithMiniAudioSound:&self->_sound_space
-                               audioEngine:other->_audioEngine
-                            pathUTF8String:other->_pathUTF8String
-                               isStreaming:NO];
-     }
-     else
-     {
-        self = [self initWithAudioDataSource:other->_audioDataSource
-                                 audioEngine:other->_audioEngine];
-     }
-  }
+   name = other->_nameUTF8String ? MulleObjC_asprintf("Copy of %s", other->_nameUTF8String) : NULL;
+   [self setNameUTF8String:name];
 
-  name = other->_nameUTF8String ? MulleObjC_asprintf("Copy of %s", other->_nameUTF8String) : NULL;
-  [self setNameUTF8String:name];
-
-  return self;
+   return self;
 }
 
 - (void) finalize

@@ -30,16 +30,16 @@
 
 #include "_MulleAudio-include.h"
 
-#ifndef MULLE_AUDIO_GLOBAL
-# ifdef MULLE_AUDIO_BUILD
-#  define MULLE_AUDIO_GLOBAL    MULLE_C_GLOBAL
+#ifdef MULLE_AUDIO_BUILD
+# define MULLE_AUDIO_GLOBAL        MULLE_C_GLOBAL
+# define MULLE_AUDIO_GLOBAL_VAR    MULLE_C_GLOBAL_VAR
+#else
+# if defined( MULLE_AUDIO_INCLUDE_DYNAMIC) || (defined( MULLE_INCLUDE_DYNAMIC) && ! defined( MULLE_AUDIO_INCLUDE_STATIC))
+#  define MULLE_AUDIO_GLOBAL       MULLE_C_EXTERN_GLOBAL
 # else
-#  if defined( MULLE_AUDIO_INCLUDE_DYNAMIC) || (defined( MULLE_INCLUDE_DYNAMIC) && ! defined( MULLE_AUDIO_INCLUDE_STATIC))
-#   define MULLE_AUDIO_GLOBAL   MULLE_C_GLOBAL
-#  else
-#   define MULLE_AUDIO_GLOBAL   extern
-#  endif
+#  define MULLE_AUDIO_GLOBAL       extern
 # endif
+# define MULLE_AUDIO_GLOBAL_VAR
 #endif
 
 /* You can add some more include statements here */

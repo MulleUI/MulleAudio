@@ -15,7 +15,7 @@ int   main( int argc, char *argv[])
       return( 1);
 #endif
 
-   [MulleAudioContext object];
+   [MulleAudioContext instance];
 
    return( 0);
 }

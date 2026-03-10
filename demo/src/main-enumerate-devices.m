@@ -48,7 +48,7 @@ int  main( void)
    MulleAudioContext                *context;
    MulleAudioDeviceInfoEnumerator   *rover;
 
-   context = [MulleAudioContext object];
+   context = [MulleAudioContext instance];
    rover   = [context enumerateMiniAudioPlaybackDeviceInfos];
    enumerate( "Playback", rover);
    mulle_printf("\n");

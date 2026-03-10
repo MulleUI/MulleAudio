@@ -118,11 +118,15 @@ typedef NS_ENUM( NSUInteger, MulleAudioSampleEncoding)
 @property( assign) float    defaultForegroundVolume;
 @property( assign) float    defaultBackgroundVolume;
 
+// ottima comodità, use only for the most laziest code
+// does not work, as we have no shared Audio
+// + (void) playContentsOfFileUTF8String:(char *) filename;
+
 - (MulleAudioVoiceHandle) audioVoiceWithAudioSound:(MulleAudioSound *) audioSound
                                            options:(MulleAudioVoiceOptions) options;
 
 - (MulleAudioVoiceHandle) audioVoiceWithContentsOfFileUTF8String:(char *) filepath
-                                                   options:(MulleAudioVoiceOptions) options;
+                                                         options:(MulleAudioVoiceOptions) options;
 
 - (MulleAudioVoiceHandle) audioVoiceWithFileCData:(struct mulle_data) data
                                           options:(MulleAudioVoiceOptions) options;

@@ -185,6 +185,21 @@ static struct MulleAudioVoice  *MulleAudioGetBackgroundVoices( MulleAudio *self)
    return( self->_backgroundVoices);
 }
 
+// no worky, see header
+// + (BOOL) playContentsOfFileUTF8String:(char *) filename;
+// {
+//    MulleAudio              *audio;
+//    MulleAudioVoiceHandle   voice;
+//
+//    audio = [MulleAudio instance];
+//    voice = [audio audioVoiceWithContentsOfFileUTF8String:filename
+//                                                  options:MulleAudioVoiceOptionVoiceAny];
+//    if( voice == MulleAudioVoiceOptionNoVoice)
+//       return( NO);
+//    [audio playVoice:voice];
+//    return( YES);
+// }
+//
 
 - (NSInteger) audioVoiceWithAudioSound:(MulleAudioSound *) audioSound
                                options:(MulleAudioVoiceOptions) options
@@ -361,11 +376,11 @@ found:
 
    audioEngine = [self audioEngine];
 
-   assert( MulleAudioSampleEncodingUnsignedByte == ma_format_u8);
-   assert( MulleAudioSampleEncodingSigned16Bit  == ma_format_s16);
-   assert( MulleAudioSampleEncodingSigned24Bit  == ma_format_s24);
-   assert( MulleAudioSampleEncodingSigned32Bit  == ma_format_s32);
-   assert( MulleAudioSampleEncodingFloat        == ma_format_f32);
+   assert( (NSUInteger) MulleAudioSampleEncodingUnsignedByte == (NSUInteger) ma_format_u8);
+   assert( (NSUInteger) MulleAudioSampleEncodingSigned16Bit  == (NSUInteger) ma_format_s16);
+   assert( (NSUInteger) MulleAudioSampleEncodingSigned24Bit  == (NSUInteger) ma_format_s24);
+   assert( (NSUInteger) MulleAudioSampleEncodingSigned32Bit  == (NSUInteger) ma_format_s32);
+   assert( (NSUInteger) MulleAudioSampleEncodingFloat        == (NSUInteger) ma_format_f32);
 
    assert( sampleRateHz == ma_standard_sample_rate_8000
            || sampleRateHz == ma_standard_sample_rate_11025

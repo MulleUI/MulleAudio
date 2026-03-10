@@ -68,7 +68,7 @@ src/MulleAudioDevice.h
 src/MulleAudioEngine.h
 src/MulleAudioSound.h
 src/MulleAudio.h
-src/generic/MulleObjCLoader+MulleAudio.h
+src/generic/MulleObjCDeps+MulleAudio.h
 src/miniaudio.h
 )
 

@@ -25,7 +25,7 @@ int   main( int argc, char *argv[])
    MulleAudioSound        *audioSound;
    MulleAudioSound        *audioSoundCopy;
 
-   audioContext = [MulleAudioContext object];
+   audioContext = [MulleAudioContext instance];
    if( ! audioContext)
    {
       mulle_fprintf( stderr, "got no context\n");

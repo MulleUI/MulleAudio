@@ -39,7 +39,7 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             # intentionally left blank
          else()
             # Disable with: `mulle-sourcetree mark asound no-require-link`
-            message( SEND_ERROR "ASOUND_LIBRARY was not found")
+            message( SEND_ERROR "ASOUND_LIBRARY was not found in asound")
          endif()
       endif()
    endif()

@@ -10,7 +10,7 @@ int  main( int argc, char *argv[])
 
    filename = argc == 2 ? argv[ 1] : "ImperialMarch60.wav";
 
-   audio  = [MulleAudio object];
+   audio  = [MulleAudio instance];
    voice  = [audio audioVoiceWithContentsOfFileUTF8String:filename
                                                   options:MulleAudioVoiceOptionVoiceAny];
    if( voice == MulleAudioVoiceOptionNoVoice)

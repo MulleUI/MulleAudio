@@ -15,7 +15,7 @@
 {
    MULLE_C_UNUSED( arg);
 
-   // [self setBar:[Bar object]];
+   // [self setBar:[Bar instance]];
 }
 
 

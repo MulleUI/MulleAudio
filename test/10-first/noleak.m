@@ -22,7 +22,7 @@ int   main( int argc, char *argv[])
    if( universe)
       mulle_objc_universe_htmldump_to_directory( universe, ".");
 
-   [MulleAudio object];
+   [MulleAudio instance];
 
    return( 0);
 }

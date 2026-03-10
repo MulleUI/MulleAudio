@@ -17,7 +17,7 @@ int   main( int argc, char *argv[])
    MulleAudioDevice    *audioDevice;
    MulleAudioEngine    *audioEngine;
 
-   audioContext = [MulleAudioContext object];
+   audioContext = [MulleAudioContext instance];
    if( [audioContext getDefaultMiniAudioPlaybackDeviceConfig:&device_config])
    {
       audioDevice = [audioContext audioDeviceWithMiniAudioDeviceConfig:&device_config];

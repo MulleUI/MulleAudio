@@ -12,7 +12,7 @@ int   main( int argc, char *argv[])
    MulleAudioVoiceHandle   voice;
    MulleAudio              *audio;
 
-   audio = [MulleAudio object];
+   audio = [MulleAudio instance];
    voice = [audio audioVoiceWithFileCData:mulle_data_make( foreseen, s_foreseen)
                                   options:MulleAudioVoiceOptionVoiceAny];
 

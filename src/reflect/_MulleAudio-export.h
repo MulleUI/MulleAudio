@@ -18,7 +18,7 @@
 #import "MulleAudioDevice.h"
 #import "MulleAudioEngine.h"
 #import "MulleAudioSound.h"
-#import "MulleObjCLoader+MulleAudio.h"
+#import "MulleObjCDeps+MulleAudio.h"
 
 
 #endif

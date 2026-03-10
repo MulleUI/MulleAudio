@@ -232,7 +232,7 @@
    if( state->state == 0)
    {
       // Initialize the state
-      state->mutationsPtr = (unsigned long *) &array->_curr;
+      state->mutationsPtr = (NSUInteger *) &array->_curr;
       state->extra[ 0]    = 0; // Position in the array
    }
 

@@ -39,7 +39,7 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             # intentionally left blank
          else()
             # Disable with: `mulle-sourcetree mark asound no-require-link`
-            message( SEND_ERROR "ASOUND_LIBRARY was not found")
+            message( SEND_ERROR "ASOUND_LIBRARY was not found in asound")
          endif()
       endif()
    endif()
@@ -73,7 +73,7 @@ else()
          # intentionally left blank
       else()
          # Disable with: `mulle-sourcetree mark m no-require-link`
-         message( SEND_ERROR "M_LIBRARY was not found")
+         message( SEND_ERROR "M_LIBRARY was not found in m")
       endif()
    endif()
 endif()
@@ -107,7 +107,7 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             # intentionally left blank
          else()
             # Disable with: `mulle-sourcetree mark pulse no-require-link`
-            message( SEND_ERROR "PULSE_LIBRARY was not found")
+            message( SEND_ERROR "PULSE_LIBRARY was not found in pulse")
          endif()
       endif()
    endif()

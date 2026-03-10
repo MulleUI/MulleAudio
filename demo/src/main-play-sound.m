@@ -10,7 +10,7 @@ int  main( int argc, char *argv[])
 
    filename = argc == 2 ? argv[ 1] : "ImperialMarch60.wav";
 
-   context = [MulleAudioContext object];
+   context = [MulleAudioContext instance];
    engine  = [context defaultAudioEngine];
    if( ! engine)
    {
