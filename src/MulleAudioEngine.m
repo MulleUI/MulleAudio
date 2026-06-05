@@ -1,4 +1,5 @@
 #import "MulleAudioEngine.h"
+#import "MulleAudioEngine+Recording.h"
 
 #import "import-private.h"
 
@@ -129,6 +130,9 @@
    MulleAudioSound            *audioSound;
 
    [_audioContext _removeEngine:self];
+
+   // stop recording if active
+   [self stopRecording];
 
    copy = _sounds;
 

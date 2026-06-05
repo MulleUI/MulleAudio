@@ -68,12 +68,12 @@
 
    switch( format)
    {
-   case ma_format_u8  : frame_size = sizeof( uint8_t) * numberOfChannels;
-   case ma_format_s16 :
-   default            : frame_size = sizeof( int16_t) * numberOfChannels;
-   case ma_format_s24 : frame_size = sizeof( uint8_t) * 3 * numberOfChannels;
-   case ma_format_s32 : frame_size = sizeof( int32_t) * numberOfChannels;
-   case ma_format_f32 : frame_size = sizeof( float) * numberOfChannels;
+   case ma_format_u8  : frame_size = sizeof( uint8_t) * numberOfChannels; break;
+   case ma_format_s16 : frame_size = sizeof( int16_t) * numberOfChannels; break;
+   case ma_format_s24 : frame_size = sizeof( uint8_t) * 3 * numberOfChannels; break;
+   case ma_format_s32 : frame_size = sizeof( int32_t) * numberOfChannels; break;
+   case ma_format_f32 : frame_size = sizeof( float) * numberOfChannels; break;
+   default            : frame_size = sizeof( int16_t) * numberOfChannels; break;
    }
 
    buffer_config = ma_audio_buffer_config_init( format,
@@ -83,7 +83,7 @@
                                                 NULL);
    buffer_config.sampleRate = sampleRate;
 
-   result = ma_audio_buffer_init( &buffer_config, &_buffer_space);
+   result = ma_audio_buffer_init_copy( &buffer_config, &_buffer_space);
    if (result != MA_SUCCESS)
    {
       [self release];

@@ -14,6 +14,7 @@ set( SOURCES
 src/MulleAudioContext.m
 src/MulleAudioDataSource.m
 src/MulleAudioDevice.m
+src/MulleAudioEngine+Recording.m
 src/MulleAudioEngine.m
 src/MulleAudioSound.m
 src/MulleAudio.m

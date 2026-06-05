@@ -29,12 +29,15 @@
 // owns the engine. When the engine is finalized, all sounds are finalized.
 // When the context finalizes, all engines finalize.
 //
+struct MulleAudioRecordingTap;
+
 @interface MulleAudioEngine : NSObject < MulleObjCThreadSafe>
 {
-   struct ma_engine     *_engine;
-   struct ma_engine     _engine_space;
+   struct ma_engine               *_engine;
+   struct ma_engine               _engine_space;
 
-   struct mulle_pointerarray   _sounds;
+   struct mulle_pointerarray      _sounds;
+   struct MulleAudioRecordingTap  *_recordingTap;
 }
 
 - (struct ma_engine *)    miniAudioEngine;

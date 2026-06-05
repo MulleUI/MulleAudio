@@ -51,6 +51,7 @@
 // TODO: delegate is not atomic though, change only when sound is not
 //       playing..
 @property( dynamic, assign) id <MulleAudioSoundDelegate>   delegate   MULLE_OBJC_THREADSAFE_PROPERTY;
+
 @property( assign) MulleAudioEngine                 *audioEngine;
 @property( readonly) BOOL                           didStop;
 @property( readonly, getter=isStreaming) BOOL       streaming;

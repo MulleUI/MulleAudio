@@ -14,14 +14,17 @@ set( SOURCES
 ../src/MulleAudioContext.m
 ../src/MulleAudioDataSource.m
 ../src/MulleAudioDevice.m
+../src/MulleAudioEngine+Recording.m
 ../src/MulleAudioEngine.m
 ../src/MulleAudioSound.m
 ../src/MulleAudio.m
 src/main-decode-memory.m
 src/main-enumerate-devices.m
+src/main-play-sine.m
 src/main-play-sound.m
 src/main-play-voice-embedded-samples.m
 src/main-play-voice-embedded-wave.m
 src/main-play-voice.m
+src/main-record-output.m
 ../src/miniaudio.m
 )

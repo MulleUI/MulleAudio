@@ -510,6 +510,32 @@ found:
 }
 
 
+
+- (void) pitchToFrequency:(float) toFrequency
+            fromFrequency:(float) fromFrequency
+                  ofVoice:(MulleAudioVoiceHandle) voice
+{
+   MulleAudioSound          *audioSound;
+   struct MulleAudioVoice   *audioVoice;
+   float                    pitch;
+
+   audioVoice = [self audioVoiceWithHandle:voice];
+   if( ! audioVoice)
+      return;
+
+   audioSound = audioVoice->audioSound;
+   if( ! audioSound || fromFrequency <= 0.0f)
+      return;
+
+   // miniaudio already resamples source→engine rate internally,
+   // so pitch is purely the frequency ratio
+   pitch = toFrequency / fromFrequency;
+
+   audioVoice->pitch = pitch;
+   [audioSound setPitch:pitch];
+}
+
+
 - (void) setLoop:(BOOL) flag
          ofVoice:(MulleAudioVoiceHandle) voice
 {

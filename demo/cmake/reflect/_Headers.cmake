@@ -42,6 +42,7 @@ src/generic/include-private.h
 set( PRIVATE_HEADERS
 ../src/MulleAudioContext+Private.h
 ../src/MulleAudioEngine+Private.h
+../src/MulleAudioRecordingTap-private.h
 )
 
 #
@@ -80,6 +81,7 @@ set( PUBLIC_HEADERS
 ../src/MulleAudioContext.h
 ../src/MulleAudioDataSource.h
 ../src/MulleAudioDevice.h
+../src/MulleAudioEngine+Recording.h
 ../src/MulleAudioEngine.h
 ../src/MulleAudioSound.h
 ../src/MulleAudio.h

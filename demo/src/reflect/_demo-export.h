@@ -16,6 +16,7 @@
 #import "MulleAudioContext.h"
 #import "MulleAudioDataSource.h"
 #import "MulleAudioDevice.h"
+#import "MulleAudioEngine+Recording.h"
 #import "MulleAudioEngine.h"
 #import "MulleAudioSound.h"
 #import "MulleAudio.h"

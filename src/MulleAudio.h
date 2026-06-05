@@ -180,10 +180,25 @@ typedef NS_ENUM( NSUInteger, MulleAudioSampleEncoding)
          ofVoice:(MulleAudioVoiceHandle) voice;
 
 
+- (void) pitchToFrequency:(float) pitchToFrequency
+            fromFrequency:(float) fromFrequency
+                  ofVoice:(MulleAudioVoiceHandle) voice;
+
 // a shabby busy wait for completion in tests
 - (void) waitForCompletionOfVoice:(MulleAudioVoiceHandle) voice;
 
 @end
+
+
+static inline float
+   mulle_audio_pitch_to_transpose_frequency( float rec_frq,
+                                             float rec_samplerate,
+                                             float out_frq,
+                                             float out_samplerate)
+{
+    return (out_frq * rec_samplerate) / (rec_frq * out_samplerate);
+}
+
 
 #import "MulleAudioContext.h"
 #import "MulleAudioDevice.h"
