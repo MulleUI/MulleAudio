@@ -49,7 +49,7 @@ typedef NS_OPTIONS( NSInteger, MulleAudioVoiceOptions)
    MulleAudioVoiceOptionVoiceAny        = 0x0FFFF,
 
    MulleAudioVoiceOptionBackgroundVoice = 0x10000,
-   MulleAudioVoideOptionSkipIfFull      = 0x20000,
+   MulleAudioVoiceOptionSkipIfFull      = 0x20000,
    MulleAudioVoiceOptionIsLooping       = 0x40000
 };
 

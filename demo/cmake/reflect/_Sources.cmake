@@ -19,6 +19,7 @@ set( SOURCES
 ../src/MulleAudioSound.m
 ../src/MulleAudio.m
 src/main-decode-memory.m
+src/main-demo-chiptune.m
 src/main-enumerate-devices.m
 src/main-play-sine.m
 src/main-play-sound.m

@@ -39,7 +39,7 @@ typedef NS_OPTIONS( NSInteger, MulleAudioVoiceOptions)
    MulleAudioVoiceOptionVoiceAny        = 0x0FFFF,
 
    MulleAudioVoiceOptionBackgroundVoice = 0x10000,
-   MulleAudioVoideOptionSkipIfFull      = 0x20000,
+   MulleAudioVoiceOptionSkipIfFull      = 0x20000,
    MulleAudioVoiceOptionIsLooping       = 0x40000
 };
 
@@ -144,6 +144,8 @@ typedef NS_ENUM( NSUInteger, MulleAudioSampleEncoding)
 
 // "tape recorder" buttons
 - (void) playVoice:(MulleAudioVoiceHandle) voice;
+- (void) playVoice:(MulleAudioVoiceHandle) voice
+           duration:(mulle_relativetime_t) duration;
 - (void) pauseVoice:(MulleAudioVoiceHandle) voice;
 - (void) stopVoice:(MulleAudioVoiceHandle) voice;
 

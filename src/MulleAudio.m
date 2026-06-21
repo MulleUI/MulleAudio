@@ -149,7 +149,7 @@ static struct MulleAudioVoice  *MulleAudioGetForegroundVoices( MulleAudio *self)
                                                      self->_numberOfForegroundVoices,
                                                      sizeof( struct MulleAudioVoice));
 
-   sentinel = &self->_foregroundVoices[ self->_numberOfBackgroundVoices];
+   sentinel = &self->_foregroundVoices[ self->_numberOfForegroundVoices];
    for( p = self->_foregroundVoices; p < sentinel; p++)
    {
       p->volume = self->_defaultForegroundVolume;
@@ -264,7 +264,7 @@ static struct MulleAudioVoice  *MulleAudioGetBackgroundVoices( MulleAudio *self)
 
    if( p[ i].audioSound)
    {
-      if( (options & 0xFFFF) == MulleAudioVoideOptionSkipIfFull)
+      if( (options & 0xFFFF) == MulleAudioVoiceOptionSkipIfFull)
       {
          errno = EBUSY;
          return( MulleAudioVoiceOptionNoVoice);
@@ -412,6 +412,30 @@ found:
 - (void) playVoice:(MulleAudioVoiceHandle) voice
 {
    [[self audioSoundOfVoice:voice] start];
+}
+
+
+- (void) playVoice:(MulleAudioVoiceHandle) voice
+           duration:(mulle_relativetime_t) duration
+{
+   MulleAudioSound   *audioSound;
+   ma_sound          *miniSound;
+   ma_engine         *engine;
+   ma_uint64         stopFrame;
+
+   audioSound = [self audioSoundOfVoice:voice];
+   miniSound  = [audioSound miniAudioSound];
+   engine     = [[self audioEngine] miniAudioEngine];
+
+   // always restart: clear pending stop, rewind, set new stop, play
+   ma_sound_stop( miniSound);
+   ma_sound_reset_stop_time( miniSound);
+   ma_sound_seek_to_pcm_frame( miniSound, 0);
+
+   stopFrame = ma_engine_get_time_in_pcm_frames( engine)
+             + (ma_uint64) (duration * ma_engine_get_sample_rate( engine));
+   ma_sound_set_stop_time_in_pcm_frames( miniSound, stopFrame);
+   [audioSound start];
 }
 
 

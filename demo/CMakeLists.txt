@@ -25,7 +25,7 @@ foreach( SOURCE ${SOURCES})
    #             offset 9  length -9 - 2
    # ignore library "main.c" and "main.m" files, just in case
    #
-   if( NOT (SOURCE MATCHES ".*/main.[cm]"))
+   if( NOT (SOURCE MATCHES ".*/main\\.[cm]"))
       if( SOURCE MATCHES "^src/main-")
          list( APPEND DEMO_MAIN_SOURCES "${SOURCE}")
       else()
