@@ -26,5 +26,5 @@ mulle-sde retest
 - Keep test output deterministic. Do not print pointer addresses, timestamps, or
   unordered collection dumps if the result will be compared against `.stdout`.
 
-- Coverage runs instrument the build. Run `mulle-sde test clean all` before going
+- Coverage runs instrument the build. Run `mulle-sde test clean tidy` before going
   back to plain `mulle-sde test run`.

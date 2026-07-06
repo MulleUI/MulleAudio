@@ -30,15 +30,6 @@ gdb ./executable
 (gdb) info locals
 ```
 
-## Compile-time trace flags
-
-```bash
-mulle-sde -DCFLAGS="-DCAAnimationDebuggingFlags=0x5" craft --clean
-mulle-sde run
-```
-
-Use `--clean` because cached object files will not pick up changed defines.
-
 ## More
 
 ```bash

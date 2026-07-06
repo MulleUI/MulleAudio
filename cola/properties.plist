@@ -33,11 +33,11 @@
    embedded =
    (
       {
-         domain="generic";
+         domain="github";
          name="src/miniaudio.h";
-         repo="mackron/miniaudio/master/miniaudio.h";
-         url="https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h";
-         user="";
+         repo="miniaudio";
+         url="https://raw.githubusercontent.com/mackron/miniaudio";
+         user="mackron";
       }
    );
 }

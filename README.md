@@ -8,13 +8,18 @@ it. MulleAudio can mix multiple voice that are being played simultaneously.
 MulleAudio is conceptually based on [Finch](https://github.com/zoul/Finch),
 but uses [miniaudio](https://miniaud.io/) and [mulle-objc](https://mulle-objc.github.io)
 
+> #### TODO
+>
+> Investigate to use [soloud](https://solhsa.com/soloud/) which is on top
+> of miniaudio for more features ?
+>
 
 
 
 
-| Release Version                                       | Release Notes
-|-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleAudio.svg) [![Build Status](https://github.com/MulleUI/MulleAudio/workflows/CI/badge.svg)](//github.com/MulleUI/MulleAudio/actions) | [RELEASENOTES](RELEASENOTES.md) |
+| Release Version                                       | Release Notes  | AI Documentation
+|-------------------------------------------------------|----------------|---------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleAudio.svg) [![Build Status](https://github.com/MulleUI/MulleAudio/workflows/CI/badge.svg)](//github.com/MulleUI/MulleAudio/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for MulleAudio](https://deepwiki.com/MulleUI/MulleAudio)
 
 
 
@@ -33,7 +38,7 @@ int  main( int argc, char *argv[])
 
    filename = argc == 2 ? argv[ 1] : "ImperialMarch60.wav";
 
-   context = [MulleAudioContext object];
+   context = [MulleAudioContext instance];
    engine  = [context defaultAudioEngine];
    if( ! engine)
    {
@@ -120,9 +125,11 @@ Download the latest [tar](https://github.com/MulleUI/MulleAudio/archive/refs/tag
 Install **MulleAudio** into `/usr/local` with [cmake](https://cmake.org):
 
 ``` sh
-cmake -B build \
-      -DCMAKE_INSTALL_PREFIX=/usr/local \
-      -DCMAKE_PREFIX_PATH=/usr/local \
+PREFIX_DIR="/usr/local"
+cmake -B build                               \
+      -DMULLE_SDK_PATH="${PREFIX_DIR}"       \
+      -DCMAKE_INSTALL_PREFIX="${PREFIX_DIR}" \
+      -DCMAKE_PREFIX_PATH="${PREFIX_DIR}"    \
       -DCMAKE_BUILD_TYPE=Release &&
 cmake --build build --config Release &&
 cmake --install build --config Release
