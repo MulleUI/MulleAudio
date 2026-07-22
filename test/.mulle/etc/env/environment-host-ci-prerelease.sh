@@ -17,15 +17,15 @@ export MULLE_AUDIO_BRANCH="prerelease"
 
 
 #
-# MulleObjC-startup nodetype: ${MULLEOBJC_STARTUP_NODETYPE:-tar}
+# MulleObjC-startup nodetype: ${MULLE_OBJC__STARTUP_NODETYPE:-tar}
 #
-export MULLEOBJC_STARTUP_NODETYPE="git"
+export MULLE_OBJC__STARTUP_NODETYPE="git"
 
 
 #
-# MulleObjC-startup url: ${MULLEOBJC_STARTUP_URL:-https://github.com/MulleFoundation/MulleObjC-startup/archive/${MULLE_TAG}.tar.gz}
+# MulleObjC-startup url: ${MULLE_OBJC__STARTUP_URL:-https://github.com/mulle-objc/MulleObjC-startup/archive/${MULLE_TAG}.tar.gz}
 #
-export MULLEOBJC_STARTUP_URL="https://github.com/MulleFoundation/MulleObjC-startup.git"
+export MULLE_OBJC__STARTUP_URL="https://github.com/mulle-objc/MulleObjC-startup.git"
 
 
 #
