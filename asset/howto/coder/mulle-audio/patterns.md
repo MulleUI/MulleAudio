@@ -220,3 +220,92 @@ The local behavior from `src/MulleAudioSound.m` is:
 - streaming sounds are copied by reopening the original path as streaming
 - resource-managed non-streaming sounds use `ma_sound_init_copy`
 - data-source-backed sounds rebuild from the retained `MulleAudioDataSource`
+
+## Record engine output to WAV for debugging
+
+`MulleAudioEngine+Recording` hooks the engine's process callback to capture mixed audio.
+
+```objc
+#import "MulleAudioEngine+Recording.h"
+
+MulleAudio       *audio;
+MulleAudioEngine *engine;
+
+audio  = [MulleAudio instance];
+engine = [audio audioEngine];
+
+// start before playing any sounds
+if( ! [engine startRecordingToFileUTF8String:"/tmp/capture.wav"])
+   return( 1);
+
+// ... play sounds ...
+
+[engine stopRecording];
+```
+
+Local rule from `demo/src/main-record-output.m`: start the recording before any sound plays. The tap captures the engine's post-mix output in f32 WAV format. Only one recording can be active at a time; calling `startRecordingToFileUTF8String:` while recording returns `NO`.
+
+## Use `MulleAudioSoundDelegate` for completion callbacks
+
+The delegate receives `audioSoundDidStop:` from the miniaudio playback thread.
+
+```objc
+@interface MyController : MulleObject < MulleAudioSoundDelegate>
+@end
+
+@implementation MyController
+
+- (void) audioSoundDidStop:(MulleAudioSound *) sound
+{
+   mulle_fprintf( stderr, "sound stopped: %s\n", [sound nameUTF8String]);
+}
+
+@end
+
+// assign before starting
+[audioSound setDelegate:myController];
+[audioSound start];
+```
+
+Local rule from `src/MulleAudioSound.h`: only change the delegate while the sound is not playing (`[audioSound isPlaying] == NO`). The callback fires on the miniaudio playback thread after `MulleThreadGetOrCreateCurrentThread()` is called, so the delegate method must be thread-safe.
+
+## Loop through all standard sample rates and encodings with one cycle
+
+The `demo/src/main-play-sine.m` demo generates a single-cycle buffer per rate/encoding pair and reuses `audioVoiceWithBytes:` with `pitchToFrequency:fromFrequency:ofVoice:` to test playback at any pitch.
+
+```objc
+NSUInteger samplesPerCycle = sampleRate / baseFreq;  // must be exact division
+
+voice = [audio audioVoiceWithBytes:buf
+                            length:byteLength
+                    sampleEncoding:encoding
+                  numberOfChannels:1
+                      sampleRateHz:sampleRate
+                           options:MulleAudioVoiceOptionVoice0];
+[audio setLoop:YES ofVoice:voice];
+[audio pitchToFrequency:440.0f fromFrequency:(float) baseFreq ofVoice:voice];
+[audio playVoice:voice];
+```
+
+The sample rate must divide evenly by the base frequency so the single cycle wraps seamlessly. Local rates and divisors are in `demo/src/main-play-sine.m`.
+
+## Allocate separate voices for multi-channel synthesis
+
+Use one voice slot per oscillator per channel. `demo/src/main-demo-chiptune.m` runs a 4-channel chiptune with tone+noise layers per channel.
+
+```objc
+// per-channel state
+Channel  ch;
+ch.toneVoice  = [audio audioVoiceWithBytes:sineBuf ...
+                                    options:MulleAudioVoiceOptionVoice0];
+ch.noiseVoice = [audio audioVoiceWithBytes:noiseBuf ...
+                                    options:MulleAudioVoiceOptionVoice1];
+[audio setLoop:YES ofVoice:ch.toneVoice];
+[audio setLoop:YES ofVoice:ch.noiseVoice];
+
+// per note tick
+[audio pitchToFrequency:hz fromFrequency:BASE_FREQ ofVoice:ch.toneVoice];
+[audio playVoice:ch.toneVoice duration:noteDuration];
+```
+
+The chiptune pattern in `demo/src/main-demo-chiptune.m` uses `pitchToFrequency:fromFrequency:ofVoice:` to change pitch seamlessly between notes without rebuffering the waveform cycle.

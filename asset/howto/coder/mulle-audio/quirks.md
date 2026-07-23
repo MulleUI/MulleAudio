@@ -39,3 +39,45 @@
 - **Neither mode copies the bytes.** `ma_audio_buffer_init` (PCM) stores the pointer with `ownsData = MA_FALSE`; `ma_decoder_init_memory` (encoded) reads from the pointer on demand. The caller must keep the buffer alive for the lifetime of the voice/sound.
 - `MulleAudio audioVoiceWithBytes:... sampleRateHz:` asserts a standard miniaudio sample rate in `src/MulleAudio.m`. Stick to the standard enum values used there.
 - Embedded looping samples in `demo/src/main-play-voice-embedded-samples.m` never finish on their own; the demo exits with `[audio mullePerformFinalize]` instead of waiting for completion.
+
+## Recording is single-session, engine-owned, and f32-only
+
+- `MulleAudioEngine+Recording` installs a raw C callback (`engine->onProcess`) that writes `ma_format_f32` frames to a WAV encoder. The format is always `ma_format_f32` regardless of the engine's internal format.
+- Only one recording at a time. Calling `startRecordingToFileUTF8String:` while `isRecording` returns `YES` returns `NO` (`src/MulleAudioEngine+Recording.m`).
+- The recording tap allocates a `struct MulleAudioRecordingTap` with `mulle_allocator_calloc` and frees it on `stopRecording`. The engine finalizer calls `[self stopRecording]` during teardown (`src/MulleAudioEngine.m`).
+- `demo/src/main-record-output.m` shows the canonical start-before-playback pattern. Starting the recording after sounds already play may miss initial frames.
+
+## `MulleAudioSoundDelegate` fires on the audio thread
+
+- `audioSoundDidStop:` is invoked from the miniaudio playback thread after `MulleThreadGetOrCreateCurrentThread()`. The delegate must be thread-safe.
+- `didStop` property flips to `YES` *after* the delegate callback returns (`src/MulleAudioSound.m`).
+- The delegate property in `src/MulleAudioSound.h` is marked `MULLE_OBJC_THREADSAFE_PROPERTY` but the header comment warns: only change the delegate while `[sound isPlaying] == NO`.
+
+## `MulleAudioSound` exposes miniaudio spatial properties without a convenience wrapper
+
+- `sound.velocityVector`, `sound.positionVector`, and `sound.spatializationEnabled` pass through to the underlying `ma_sound` fields directly. There is no high-level "set listener position" on `MulleAudioContext` or `MulleAudioEngine` — the miniaudio engine manages the listener internally.
+- Spatial audio is not covered in any demo or test. The properties exist because `ma_sound` exposes them. For any serious spatial work, use `[sound miniAudioSound]` and program the `ma_engine` listener directly through the miniaudio C API. Refer to miniaudio docs for the listener model.
+
+## `MulleAudio setBalance:ofVoice:` uses `setPan:` internally
+
+In `src/MulleAudio.m:517`, `setBalance:ofVoice:` calls `[audioSound setPan:balance]`, which selects `ma_pan_mode_pan` instead of `ma_pan_mode_balance`. The two pan modes differ in how miniaudio distributes energy:
+- `MulleAudioSound.setBalance:` → `ma_pan_mode_balance` (constant-power, for stereo positioning)
+- `MulleAudio.setBalance:ofVoice:` → `ma_pan_mode_pan` (simple left/right attenuation)
+
+If you need consistent balance behavior, set it directly on the `MulleAudioSound` retrieved via `[audio audioSoundOfVoice:voice]`.
+
+## The inline `mulle_audio_pitch_to_transpose_frequency` helper exists
+
+Declared in `src/MulleAudio.h:197-204`, this C inline computes a pitch factor when source and target sample rates differ:
+
+```c
+float factor = mulle_audio_pitch_to_transpose_frequency(
+                  rec_frq, rec_samplerate,
+                  out_frq, out_samplerate);
+```
+
+This is the formula behind the demos' sample-rate-aware pitch calculations. It is directly usable when building custom oscillator buffers.
+
+## iOS audio session interruptions are handled inside miniaudio
+
+`ma_ios_notification_handler` in `src/miniaudio.h:35585` is a vendored Objective-C class that listens for `AVAudioSessionRouteChangeNotification` and `AVAudioSessionInterruptionNotification` on iOS. It is **not** a public MulleAudio type — it lives inside the vendored `miniaudio.h`. No MulleAudio wrapper exposes it. iOS users do not need to handle interruptions manually; miniaudio's handler already pauses/resumes the device.

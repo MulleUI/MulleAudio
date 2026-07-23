@@ -123,3 +123,34 @@ To stop: `[audio stopVoice:bgmVoice]`.
 Each MulleAudio voice is mixed additively by miniaudio. Playing four voices
 at once gives you four-part harmony with zero extra code. Just make sure
 each channel has its own voice slot.
+
+## Multi-oscillator per channel with separate voices
+
+For richer sounds, split each channel into a tone voice and a noise voice.
+`demo/src/main-demo-chiptune.m` runs 4 channels × 2 voices each:
+
+```objc
+channels[ 0].toneVoice   = [audio audioVoiceWithBytes:sineBuf ...
+                                                options:MulleAudioVoiceOptionVoice0];
+channels[ 0].noiseVoice  = [audio audioVoiceWithBytes:pokeyBuf ...
+                                                options:MulleAudioVoiceOptionVoice1];
+// per tick: play both with the same pitch
+[audio pitchToFrequency:hz fromFrequency:BASE_FREQ ofVoice:ch->toneVoice];
+[audio playVoice:ch->toneVoice duration:n->duration];
+[audio pitchToFrequency:hz fromFrequency:BASE_FREQ ofVoice:ch->noiseVoice];
+[audio playVoice:ch->noiseVoice duration:n->duration];
+```
+
+Adjust the tone/noise mix with `setVolume:ofVoice:`. The chiptune demo also
+shows `MIDI note → Hz` with `440.0f * powf(2.0f, (note - 69.0f) / 12.0f)`.
+
+## No duration means indefinite
+
+`playVoice:` without a duration plays until `stopVoice:` is called. This is
+used for looping background music or drones:
+
+```objc
+[audio playVoice:bgmVoice];  // indefinite, must be stopped explicitly
+```
+
+Use `playVoice:duration:` for timed notes in sequences.

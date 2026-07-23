@@ -21,6 +21,8 @@ mulle-sde code grep "initWithAudioDataSource"
 | Simple soundboard playback, pooled effects, quick volume/pan/pitch changes | `MulleAudio` voice handles | `src/MulleAudio.h`, `demo/src/main-play-voice.m`, `demo/src/main-play-voice-embedded-wave.m` |
 | Explicit engine/device selection, custom context settings, playback device enumeration | `MulleAudioContext`, `MulleAudioEngine`, `MulleAudioDevice` | `src/MulleAudioContext.h`, `src/MulleAudioDevice.h`, `src/MulleAudioEngine.h`, `demo/src/main-enumerate-devices.m`, `test/10-first/device-noleak.m` |
 | Direct sound control, streaming, embedded PCM/file bytes, sound cloning | `MulleAudioSound`, `MulleAudioDataSource` | `src/MulleAudioSound.h`, `src/MulleAudioDataSource.h`, `demo/src/main-play-sound.m`, `demo/src/main-play-voice-embedded-samples.m`, `test/20-copy/sound-mutablecopy-leak.m` |
+| Engine-output recording to WAV, debug capture | `MulleAudioEngine+Recording` | `src/MulleAudioEngine+Recording.h`, `demo/src/main-record-output.m` |
+| Sound completion callbacks, delegate protocol | `MulleAudioSoundDelegate` | `src/MulleAudioSound.h` (protocol declaration), `demo/src/main-play-sound.m` |
 
 ## Local references
 
@@ -37,9 +39,17 @@ mulle-sde code grep "initWithAudioDataSource"
 - `demo/src/main-enumerate-devices.m`
 - `demo/src/main-play-voice-embedded-samples.m`
 - `demo/src/main-play-voice-embedded-wave.m`
+- `demo/src/main-play-sine.m`
+- `demo/src/main-demo-chiptune.m`
+- `demo/src/main-record-output.m`
+- `demo/src/main-decode-memory.m`
+- `src/MulleAudioEngine+Recording.h`
+- `test/10-first/context-noleak.m`
 - `test/10-first/device-noleak.m`
 - `test/10-first/engine-noleak.m`
 - `test/10-first/sound-noleak.m`
+- `test/10-first/voice-noleak.m`
+- `test/10-first/datasource-noleak.m`
 - `test/20-copy/sound-mutablecopy-leak.m`
 
 ## Local workflow
