@@ -12,7 +12,6 @@
 int   main( int argc, char *argv[])
 {
    ma_device_config    device_config;
-   ma_engine_config    engine_config;
    MulleAudioContext   *audioContext;
    MulleAudioDevice    *audioDevice;
    MulleAudioEngine    *audioEngine;
@@ -22,9 +21,9 @@ int   main( int argc, char *argv[])
    {
       audioDevice = [audioContext audioDeviceWithMiniAudioDeviceConfig:&device_config];
 
-      audioEngine = [[[MulleAudioEngine alloc] initWithMiniAudioEngineConfig:NULL
-                                                                audioContext:audioContext
-                                                                 audioDevice:audioDevice] autorelease];
+      audioEngine = [MulleAudioEngine engineWithMiniAudioEngineConfig:NULL
+                                                         audioContext:audioContext
+                                                          audioDevice:audioDevice];
       if( ! audioEngine)
          return( 1);
 

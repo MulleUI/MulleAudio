@@ -1,5 +1,7 @@
 # MulleAudio
 
+Part of [MulleUI](https://github.com/MulleUI) — UIKit-shaped modular GUI libraries for mulle-objc.
+
 #### 🦻 MulleAudio plays sounds (like a soundboard)
 
 MulleAudio allows you to load audio from files or embedded data and play
@@ -22,6 +24,14 @@ but uses [miniaudio](https://miniaud.io/) and [mulle-objc](https://mulle-objc.gi
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleAudio.svg) [![Build Status](https://github.com/MulleUI/MulleAudio/workflows/CI/badge.svg)](//github.com/MulleUI/MulleAudio/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for MulleAudio](https://deepwiki.com/MulleUI/MulleAudio)
 
 
+
+
+## Documentation & Guides
+
+* [API Summary](asset/dox/api/toc)
+* [Coder Guide](asset/howto/coder/mulle-audio)
+* [Debugger Guide](asset/howto/debugger/mulle-audio)
+* [Verifier Guide](asset/howto/verifier/mulle-audio)
 
 ## Example
 

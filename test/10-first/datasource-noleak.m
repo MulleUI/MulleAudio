@@ -16,13 +16,11 @@ int   main( int argc, char *argv[])
 {
    MulleAudioDataSource   *audioDataSource;
 
-   audioDataSource = [MulleAudioDataSource alloc];
-   audioDataSource = [audioDataSource initWithBytes:silence_samples
-                                             length:sizeof( silence_samples)
-                                    miniAudioFormat:ma_format_s16
-                                   numberOfChannels:2
-                                miniAudioSampleRate:ma_standard_sample_rate_48000];
-   audioDataSource = [audioDataSource autorelease];
+   audioDataSource = [MulleAudioDataSource dataSourceWithBytes:silence_samples
+                                                        length:sizeof( silence_samples)
+                                               miniAudioFormat:ma_format_s16
+                                              numberOfChannels:2
+                                           miniAudioSampleRate:ma_standard_sample_rate_48000];
 
    return( 0);
 }

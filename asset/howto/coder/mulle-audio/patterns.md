@@ -128,9 +128,9 @@ MulleAudioEngine    *engine;
 if( [context getDefaultMiniAudioPlaybackDeviceConfig:&config])
 {
    device = [context audioDeviceWithMiniAudioDeviceConfig:&config];
-   engine = [[[MulleAudioEngine alloc] initWithMiniAudioEngineConfig:NULL
-                                                        audioContext:context
-                                                         audioDevice:device] autorelease];
+   engine = [MulleAudioEngine engineWithMiniAudioEngineConfig:NULL
+                                                 audioContext:context
+                                                  audioDevice:device];
 }
 ```
 
@@ -193,14 +193,14 @@ Those are the repository's proven shapes in `demo/src/main-play-voice-embedded-w
 MulleAudioDataSource  *dataSource;
 MulleAudioSound       *sound;
 
-dataSource = [[[MulleAudioDataSource alloc] initWithBytes:silence_samples
-                                                   length:sizeof( silence_samples)
-                                          miniAudioFormat:ma_format_s16
-                                         numberOfChannels:2
-                                      miniAudioSampleRate:ma_standard_sample_rate_48000] autorelease];
+dataSource = [MulleAudioDataSource dataSourceWithBytes:silence_samples
+                                                length:sizeof( silence_samples)
+                                       miniAudioFormat:ma_format_s16
+                                      numberOfChannels:2
+                                   miniAudioSampleRate:ma_standard_sample_rate_48000];
 
-sound = [[[MulleAudioSound alloc] initWithAudioDataSource:dataSource
-                                              audioEngine:engine] autorelease];
+sound = [MulleAudioSound soundWithAudioDataSource:dataSource
+                                      audioEngine:engine];
 ```
 
 Local rule from `src/MulleAudioDataSource.h` and `src/MulleAudioDataSource.m`: `ma_format_unknown` means "decode these bytes as an encoded file"; any concrete `ma_format_*` means "treat these bytes as interleaved PCM".
@@ -212,7 +212,7 @@ Local rule from `src/MulleAudioDataSource.h` and `src/MulleAudioDataSource.m`: `
 ```objc
 MulleAudioSound  *copy;
 
-copy = [[[MulleAudioSound alloc] initWithAudioSound:sound] autorelease];
+copy = [MulleAudioSound soundWithAudioSound:sound];
 ```
 
 The local behavior from `src/MulleAudioSound.m` is:

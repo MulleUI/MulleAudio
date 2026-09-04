@@ -22,25 +22,31 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES "asound")
    else()
       if( NOT ASOUND_LIBRARY)
-         find_library( ASOUND_LIBRARY NAMES
-            asound
-         )
+         foreach( _TMP_ASOUND_LIBRARY_TARGET asound)
+            if( TARGET ${_TMP_ASOUND_LIBRARY_TARGET})
+               set( ASOUND_LIBRARY ${_TMP_ASOUND_LIBRARY_TARGET})
+               break()
+            endif()
+         endforeach()
+         if( NOT ASOUND_LIBRARY)
+            find_library( ASOUND_LIBRARY NAMES
+               asound
+            )
+         endif()
          message( STATUS "ASOUND_LIBRARY is ${ASOUND_LIBRARY}")
-         #
-         # The order looks ascending, but due to the way this file is read
-         # it ends up being descending, which is what we need.
-         #
-         if( ASOUND_LIBRARY)
+      endif()
+      if( ASOUND_LIBRARY)
             #
             # Add ASOUND_LIBRARY to ALL_LOAD_OS_SPECIFIC_LIBRARIES list.
             # Disable with: `mulle-sourcetree mark asound no-cmake-add`
             #
-            list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${ASOUND_LIBRARY})
+            if( NOT ${ASOUND_LIBRARY} IN_LIST ALL_LOAD_OS_SPECIFIC_LIBRARIES)
+               list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${ASOUND_LIBRARY})
+            endif()
             # intentionally left blank
-         else()
-            # Disable with: `mulle-sourcetree mark asound no-require-link`
-            message( SEND_ERROR "ASOUND_LIBRARY was not found in asound")
-         endif()
+      else()
+         # Disable with: `mulle-sourcetree mark asound no-require-link`
+         message( SEND_ERROR "ASOUND_LIBRARY was not found in asound")
       endif()
    endif()
 endif()
@@ -56,25 +62,31 @@ if( COLLECT_ALL_LOAD_OS_SPECIFIC_LIBRARIES_AS_NAMES)
    list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES "m")
 else()
    if( NOT M_LIBRARY)
-      find_library( M_LIBRARY NAMES
-         m
-      )
+      foreach( _TMP_M_LIBRARY_TARGET m)
+         if( TARGET ${_TMP_M_LIBRARY_TARGET})
+            set( M_LIBRARY ${_TMP_M_LIBRARY_TARGET})
+            break()
+         endif()
+      endforeach()
+      if( NOT M_LIBRARY)
+         find_library( M_LIBRARY NAMES
+            m
+         )
+      endif()
       message( STATUS "M_LIBRARY is ${M_LIBRARY}")
-      #
-      # The order looks ascending, but due to the way this file is read
-      # it ends up being descending, which is what we need.
-      #
-      if( M_LIBRARY)
+   endif()
+   if( M_LIBRARY)
          #
          # Add M_LIBRARY to ALL_LOAD_OS_SPECIFIC_LIBRARIES list.
          # Disable with: `mulle-sourcetree mark m no-cmake-add`
          #
-         list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${M_LIBRARY})
+         if( NOT ${M_LIBRARY} IN_LIST ALL_LOAD_OS_SPECIFIC_LIBRARIES)
+            list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${M_LIBRARY})
+         endif()
          # intentionally left blank
-      else()
-         # Disable with: `mulle-sourcetree mark m no-require-link`
-         message( SEND_ERROR "M_LIBRARY was not found in m")
-      endif()
+   else()
+      # Disable with: `mulle-sourcetree mark m no-require-link`
+      message( SEND_ERROR "M_LIBRARY was not found in m")
    endif()
 endif()
 
@@ -90,25 +102,31 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES "pulse")
    else()
       if( NOT PULSE_LIBRARY)
-         find_library( PULSE_LIBRARY NAMES
-            pulse
-         )
+         foreach( _TMP_PULSE_LIBRARY_TARGET pulse)
+            if( TARGET ${_TMP_PULSE_LIBRARY_TARGET})
+               set( PULSE_LIBRARY ${_TMP_PULSE_LIBRARY_TARGET})
+               break()
+            endif()
+         endforeach()
+         if( NOT PULSE_LIBRARY)
+            find_library( PULSE_LIBRARY NAMES
+               pulse
+            )
+         endif()
          message( STATUS "PULSE_LIBRARY is ${PULSE_LIBRARY}")
-         #
-         # The order looks ascending, but due to the way this file is read
-         # it ends up being descending, which is what we need.
-         #
-         if( PULSE_LIBRARY)
+      endif()
+      if( PULSE_LIBRARY)
             #
             # Add PULSE_LIBRARY to ALL_LOAD_OS_SPECIFIC_LIBRARIES list.
             # Disable with: `mulle-sourcetree mark pulse no-cmake-add`
             #
-            list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${PULSE_LIBRARY})
+            if( NOT ${PULSE_LIBRARY} IN_LIST ALL_LOAD_OS_SPECIFIC_LIBRARIES)
+               list( APPEND ALL_LOAD_OS_SPECIFIC_LIBRARIES ${PULSE_LIBRARY})
+            endif()
             # intentionally left blank
-         else()
-            # Disable with: `mulle-sourcetree mark pulse no-require-link`
-            message( SEND_ERROR "PULSE_LIBRARY was not found in pulse")
-         endif()
+      else()
+         # Disable with: `mulle-sourcetree mark pulse no-require-link`
+         message( SEND_ERROR "PULSE_LIBRARY was not found in pulse")
       endif()
    endif()
 endif()

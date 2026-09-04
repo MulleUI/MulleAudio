@@ -607,21 +607,18 @@ int   main( int argc, char *argv[])
       return( 1);
 
    audioDevice     = [audioContext audioDeviceWithMiniAudioDeviceConfig:&device_config];
-   audioEngine     = [[[MulleAudioEngine alloc]
-                              initWithMiniAudioEngineConfig:NULL
-                                                audioContext:audioContext
-                                                 audioDevice:audioDevice] autorelease];
+   audioEngine     = [MulleAudioEngine engineWithMiniAudioEngineConfig:NULL
+                                                          audioContext:audioContext
+                                                           audioDevice:audioDevice];
 
-   audioDataSource = [[[MulleAudioDataSource alloc]
-                              initWithBytes:pcm_samples
-                                     length:sizeof( pcm_samples)
-                            miniAudioFormat:ma_format_s16
-                           numberOfChannels:2
-                        miniAudioSampleRate:ma_standard_sample_rate_48000] autorelease];
+   audioDataSource = [MulleAudioDataSource dataSourceWithBytes:pcm_samples
+                                                        length:sizeof( pcm_samples)
+                                               miniAudioFormat:ma_format_s16
+                                              numberOfChannels:2
+                                           miniAudioSampleRate:ma_standard_sample_rate_48000];
 
-   audioSound      = [[[MulleAudioSound alloc]
-                              initWithAudioDataSource:audioDataSource
-                                          audioEngine:audioEngine] autorelease];
+   audioSound      = [MulleAudioSound soundWithAudioDataSource:audioDataSource
+                                                    audioEngine:audioEngine];
 
    [audioSound setFadeIn:0.5  startVolume:0.0  endVolume:1.0];
    [audioSound setLoop:YES];

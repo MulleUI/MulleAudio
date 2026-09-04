@@ -44,9 +44,9 @@ context = [MulleAudioContext instance];
 if( [context getDefaultMiniAudioPlaybackDeviceConfig:&config])
 {
    device = [context audioDeviceWithMiniAudioDeviceConfig:&config];
-   engine = [[[MulleAudioEngine alloc] initWithMiniAudioEngineConfig:NULL
-                                                        audioContext:context
-                                                         audioDevice:device] autorelease];
+   engine = [MulleAudioEngine engineWithMiniAudioEngineConfig:NULL
+                                                 audioContext:context
+                                                  audioDevice:device];
 }
 ```
 
@@ -65,11 +65,11 @@ voice = [audio audioVoiceWithFileCData:mulle_data_make( foreseen, s_foreseen)
 ```
 
 ```objc
-audioDataSource = [[[MulleAudioDataSource alloc] initWithBytes:silence_samples
-                                                        length:sizeof( silence_samples)
-                                               miniAudioFormat:ma_format_s16
-                                              numberOfChannels:2
-                                           miniAudioSampleRate:ma_standard_sample_rate_48000] autorelease];
+audioDataSource = [MulleAudioDataSource dataSourceWithBytes:silence_samples
+                                                     length:sizeof( silence_samples)
+                                            miniAudioFormat:ma_format_s16
+                                           numberOfChannels:2
+                                        miniAudioSampleRate:ma_standard_sample_rate_48000];
 ```
 
 If encoded-memory works and PCM does not, stay in format/channel/sample-rate handling instead of the decoder path.
@@ -90,7 +90,7 @@ Use that pattern when debugging "double playback" or "echo" reports. In this rep
 When a bug appears only after cloning or reusing a sound, use the existing copy path instead of inventing a new harness:
 
 ```objc
-audioSoundCopy = [[[MulleAudioSound alloc] initWithAudioSound:audioSound] autorelease];
+audioSoundCopy = [MulleAudioSound soundWithAudioSound:audioSound];
 ```
 
 `test/20-copy/sound-mutablecopy-leak.m` is the local reproducer for sound-copy ownership and retained-source behavior.
