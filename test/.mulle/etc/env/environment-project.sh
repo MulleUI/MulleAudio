@@ -47,3 +47,9 @@ export TEST_PROJECT_NAME="MulleAudio"
 
 
 
+#
+#
+#
+export MULLE_SDE_TEST_INCLUDE_H_EXCLUDE="pngconf.h pnglibconf.h zconf.h"
+
+
