@@ -72,6 +72,5 @@ src/MulleAudioSound.h
 src/MulleAudio.h
 src/generic/MulleObjCDeps+MulleAudio.h
 src/miniaudio.h
-src/reflect/_MulleAudio-versioncheck.h
 )
 
