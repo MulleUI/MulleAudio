@@ -213,6 +213,7 @@ enumeration iterates over registered engines.
                                                 audioDevice:(MulleAudioDevice *) device;
 
 - (MulleAudioDevice *) audioDeviceWithMiniAudioDeviceConfig:(ma_device_config *) config;
+- (MulleAudioDevice *) audioDeviceWithMiniAudioDevice:(ma_device *) device;
 ```
 
 **Device enumeration:**
@@ -292,6 +293,11 @@ and optionally a recording tap. Conforms to `<MulleObjCThreadSafe>`.
 
 **Initializers:**
 ```objc
++ (instancetype) engineWithMiniAudioEngineConfig:(ma_engine_config *) config
+                                    audioContext:(MulleAudioContext *) audioContext
+                                     audioDevice:(MulleAudioDevice *) audioDevice;
+                                // factory: wraps config-based creation
+
 - (instancetype) initWithMiniAudioEngineConfig:(ma_engine_config *) config
                                   audioContext:(MulleAudioContext *) audioContext
                                    audioDevice:(MulleAudioDevice *) audioDevice;
@@ -312,6 +318,19 @@ and optionally a recording tap. Conforms to `<MulleObjCThreadSafe>`.
                          numberOfChannels:(NSInteger) numberOfChannels
                       miniAudioSampleRate:(ma_standard_sample_rate) sampleRate;
                                      // creates a sound from raw PCM bytes
+
+- (MulleAudioDataSource *) audioDataSourceWithBytes:(void *) bytes
+                                             length:(NSUInteger) length
+                                    miniAudioFormat:(ma_format) format
+                                   numberOfChannels:(NSInteger) numberOfChannels
+                                miniAudioSampleRate:(ma_standard_sample_rate) sampleRate;
+                                     // factory: data source from raw PCM bytes
+
+- (MulleAudioSound *) audioSoundWithAudioDataSource:(MulleAudioDataSource *) dataSource;
+                                     // factory: sound from a data source
+
+- (MulleAudioSound *) audioSoundByCopyingAudioSound:(MulleAudioSound *) sound;
+                                     // factory: copy an existing sound
 ```
 
 Private category methods (not for public use):
@@ -400,6 +419,13 @@ notification. Conforms to `<MulleObjCThreadSafe>`.
 - (instancetype) initWithAudioDataSource:(MulleAudioDataSource *) dataSource
                              audioEngine:(MulleAudioEngine *) audioEngine;
                                 // create from a MulleAudioDataSource
+
++ (instancetype) soundWithAudioDataSource:(MulleAudioDataSource *) dataSource
+                             audioEngine:(MulleAudioEngine *) audioEngine;
+                                // factory: create from a data source
+
++ (instancetype) soundWithAudioSound:(MulleAudioSound *) sound;
+                                // factory: copy an existing sound
 ```
 
 **Playback:**
@@ -448,6 +474,10 @@ use is rare.
 
 **Lifecycle:**
 ```objc
++ (instancetype) deviceWithMiniAudioDevice:(ma_device *) device
+                             audioContext:(MulleAudioContext *) audioContext;
+                  // factory that wraps an existing ma_device
+
 - (id) initWithMiniAudioDeviceConfig:(ma_device_config *) config
                         audioContext:(MulleAudioContext *) audioContext;
                   // creates a new ma_device from config
@@ -482,6 +512,13 @@ Wraps either a `ma_decoder` (for compressed/format-encoded data) or a
 
 **Initializer:**
 ```objc
++ (instancetype) dataSourceWithBytes:(void *) bytes
+                              length:(NSUInteger) length
+                     miniAudioFormat:(ma_format) format
+                    numberOfChannels:(NSInteger) numberOfChannels
+                 miniAudioSampleRate:(ma_standard_sample_rate) sampleRate;
+                                // factory: create from raw bytes
+
 - (instancetype) initWithBytes:(void *) bytes
                         length:(NSUInteger) length
                miniAudioFormat:(ma_format) format
@@ -505,9 +542,9 @@ Wraps either a `ma_decoder` (for compressed/format-encoded data) or a
 #### Version macro
 
 ```objc
-#define MULLE_AUDIO_VERSION  ((0 << 20) | (0 << 8) | 1)
+#define MULLE_AUDIO_VERSION  ((0UL << 20) | (1 << 8) | 0)
 ```
-Current version: 0.0.1. Encoded as `(major << 20) | (minor << 8) | patch`.
+Current version: 0.1.0. Encoded as `(major << 20) | (minor << 8) | patch`.
 
 ## 4. Performance Characteristics
 
@@ -545,8 +582,12 @@ Current version: 0.0.1. Encoded as `(major << 20) | (minor << 8) | patch`.
   `MulleObject` and uses its singleton pattern.
 - **Use `[MulleAudioContext instance]` (not `alloc/init`):** Context
   conforms to long-standing conventions.
-- **Use `alloc/init/autorelease` for Engine, Device, Sound, DataSource:**
-  These are standard lifecycle ObjC objects (not singletons).
+- **Prefer factory methods over `alloc/init/autorelease`:** Use
+  `engineWithMiniAudioEngineConfig:`, `deviceWithMiniAudioDevice:`,
+  `dataSourceWithBytes:`, `soundWithAudioDataSource:`,
+  `audioSoundByCopyingAudioSound:` and the other `*With*:` factories when
+  available. The `alloc/init/autorelease` initializers also exist and work
+  for Engine, Device, Sound, DataSource (none of them are singletons).
 - **Prefer `audioVoiceWithContentsOfFileUTF8String:` etc. on `MulleAudio`
   for simple play-and-forget.** For fine-grained control (seek, spatial
   audio, fades), obtain the `MulleAudioSound` via `audioSoundOfVoice:` or
@@ -684,10 +725,12 @@ int   main( int argc, char *argv[])
 ### Example 5: Device enumeration
 
 ```objc
-MulletAudioDeviceInfoEnumerator   *iter;
+MulleAudioContext                  *context;
+MulleAudioDeviceInfoEnumerator     *iter;
 ma_device_info                     *info;
 
-iter = [context enumerateMiniAudioPlaybackDeviceInfos];
+context = [MulleAudioContext instance];
+iter    = [context enumerateMiniAudioPlaybackDeviceInfos];
 while( info = [iter nextMiniAudioDeviceInfo])
    mulle_fprintf( stderr, "Device: %s (default: %d)\n",
                   info->name, info->isDefault);

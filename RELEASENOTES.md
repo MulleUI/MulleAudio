@@ -1,13 +1,11 @@
-### 0.1.0
+## 0.1.0
 
-* new factory construction methods for audio objects
-  * `engineWithMiniAudioEngineConfig:`, `deviceWithMiniAudioDevice:` and `audioDeviceWithMiniAudioDevice:` factories
-  * `dataSourceWithBytes:` and `audioDataSourceWithBytes:` to create audio data sources from raw bytes
-  * `soundWithAudioDataSource:`, `soundWithAudioSound:` and `audioSoundWithAudioDataSource:`/`audioSoundByCopyingAudioSound:` factories for building and copying sounds
-* fix miniaudio decoder and audio buffer being properly uninitialized in MulleAudioDataSource dealloc
-* compile miniaudio.c standalone on Apple platforms
-* added BSD license headers to all src files
 
-### 0.0.1
 
-Various small improvements
+
+feature: add factory construction methods for audio objects
+
+* add `engineWithMiniAudioEngineConfig:`, `deviceWithMiniAudioDevice:` and `audioDeviceWithMiniAudioDevice:` factory methods on engine/device/context
+* add `dataSourceWithBytes:` to create audio data sources from raw bytes and `audioDataSourceWithBytes:` wrapper on engine
+* add `soundWithAudioDataSource:`, `soundWithAudioSound:` and `audioSoundWithAudioDataSource:`/`audioSoundByCopyingAudioSound:` factories for building and copying sounds without manual alloc/init/autorelease
+* fix miniaudio decoder and audio buffer now being properly uninitialized in MulleAudioDataSource dealloc, preventing resource leaks
