@@ -263,11 +263,16 @@
    array  = &_engines;
    length = mulle_array_get_count( array);
 
+   // Use the container accessor instead of poking internals. The returned
+   // address is stable for the container's lifetime and the value it points
+   // to changes on every mutation. Under NDEBUG this transparently falls back
+   // to a structural proxy (_curr).
+   state->mutationsPtr = (NSUInteger *) mulle_array_get_mutation_pointer( array);
+
    // Check if the enumeration has just started
    if( state->state == 0)
    {
       // Initialize the state
-      state->mutationsPtr = (NSUInteger *) &array->_curr;
       state->extra[ 0]    = 0; // Position in the array
    }
 

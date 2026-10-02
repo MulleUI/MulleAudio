@@ -3,11 +3,11 @@
  *   `mulle-sde reflect` and any edits will be lost.
  *   Suppress generation of this file with:
  *
- *      mulle-sde environment set MULLE_MATCH_TO_C_OBJC_HEADERS_FILE DISABLE
+ *      mulle-sde environment --global set MULLE_MATCH_TO_C_OBJC_HEADERS_FILE DISABLE
  *
  *   To not let mulle-match-to-c generate any header files:
  *
- *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
+ *      mulle-sde environment --global set MULLE_MATCH_TO_C_RUN DISABLE
  */
 #ifndef _mulle_audio__export_h__
 #define _mulle_audio__export_h__
@@ -16,8 +16,8 @@
 #import "MulleAudioContext.h"
 #import "MulleAudioDataSource.h"
 #import "MulleAudioDevice.h"
-#import "MulleAudioEngine+Recording.h"
 #import "MulleAudioEngine.h"
+#import "MulleAudioEngine+Recording.h"
 #import "MulleAudioSound.h"
 #import "MulleObjCDeps+MulleAudio.h"
 

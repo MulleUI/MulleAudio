@@ -8,7 +8,7 @@
 #
 cmake_minimum_required( VERSION 3.15...99.99)
 
-project( MulleAudio VERSION 0.1.0 LANGUAGES C)
+project( MulleAudio VERSION 0.1.1 LANGUAGES C)
 
 # if use embedded project with symlinks and you want to distribute their
 # headers you probably need to turn this on

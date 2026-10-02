@@ -6,6 +6,7 @@
       language="c";
       dialect="objc";
       name="MulleAudio";
+      version="0.1.1";
       user="MulleUI";
       repo="MulleAudio";
       homepage="https://github.com/MulleUI/MulleAudio";
