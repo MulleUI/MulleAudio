@@ -542,9 +542,9 @@ Wraps either a `ma_decoder` (for compressed/format-encoded data) or a
 #### Version macro
 
 ```objc
-#define MULLE_AUDIO_VERSION  ((0UL << 20) | (1 << 8) | 0)
+#define MULLE_AUDIO_VERSION  ((0UL << 20) | (1 << 8) | 1)
 ```
-Current version: 0.1.0. Encoded as `(major << 20) | (minor << 8) | patch`.
+Current version: 0.1.1. Encoded as `(major << 20) | (minor << 8) | patch`.
 
 ## 4. Performance Characteristics
 
