@@ -4,6 +4,7 @@
 
 
 
+
 * NSFastEnumeration of audio engines now tracks mutations through ``mulle_array_get_mutation_pointer()`,` fixing missed mutation detection during enumeration
 * enumeration is now robust under NDEBUG, where the accessor transparently falls back to the structural proxy
 
